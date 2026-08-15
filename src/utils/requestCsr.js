@@ -14,8 +14,6 @@ const service = axios.create({
     timeout: 30000, // timeout은 5초로 설정
     headers: {
         'Content-Type': 'application/json;charset=UTF-8',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
         'x-auth-user-service-key': envs.serviceKey,
     },
 })

@@ -7,12 +7,12 @@ module.exports = {
     publicPath: undefined,
     lintOnSave: false,
     devServer: {
+        port: 9000,
         proxy: {
             '^/api': {
                 target: 'http://localhost:9090/api'
             }
-        },
-        // port: 9091
+        }
     },
 
     outputDir: undefined,

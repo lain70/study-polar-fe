@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "start": "vue-cli-service serve",
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build --mode development",
         "lint": "vue-cli-service lint"
@@ -23,18 +24,18 @@
         "@vue/cli-plugin-vuex": "~5.0.0",
         "@vue/cli-service": "~5.0.0",
         "@vue/eslint-config-standard": "^6.1.0",
+        "axios": "^0.25.0",
+        "axios-mock-adapter": "^1.19.0",
         "eslint": "^7.32.0",
         "eslint-plugin-import": "^2.25.3",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^5.1.0",
         "eslint-plugin-vue": "^8.0.3",
-        "node-sass": "^7.0.1",
+        "sass": "^1.102.0",
         "sass-loader": "^12.6.0",
         "stylus": "^0.55.0",
         "stylus-loader": "^6.1.0",
-        "vue-template-compiler": "^2.6.14",
-        "axios": "^0.25.0",
-        "axios-mock-adapter": "^1.19.0"
+        "vue-template-compiler": "^2.6.14"
     },
     "eslintConfig": {
         "root": false,
