@@ -1,5 +1,4 @@
 import { loginCsrUser, logoutCsrUser } from '@/api/login.js'
-import store from '@/store'
 
 export default {
     state: {
@@ -34,9 +33,7 @@ export default {
     actions: {
         CsrLoginProc({ commit }, userInfo) {
             return new Promise((resolve, reject) => {
-                console.log('store actions Login')
                 loginCsrUser(userInfo).then(response => {
-                    console.log(response)
                     if (response && response.status === 200) {
                         localStorage.setItem('accessToken', response.data.accessToken)
                         localStorage.setItem('refreshToken', response.data.refreshToken)
@@ -46,15 +43,9 @@ export default {
                         commit('SET_REFRESH_TOKEN', response.data.refreshToken)
                         resolve(true);
                     } else {
-                        if (response.data && response.data.ERROR_MSG) {
-                            alert(response.data.ERROR_MSG)
-                        } else {
-                            alert('시스템 오류가 발생하였습니다.')
-                        }
-                        reject()
+                        reject(new Error('로그인 응답이 올바르지 않습니다.'))
                     }
                 }).catch(error => {
-                    console.log(error)
                     reject(error)
                 })
             })

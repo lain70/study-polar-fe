@@ -7,8 +7,7 @@ Vue.use(VueRouter)
 const routes = [{
         path: '/',
         name: 'home',
-        component: () =>
-            import ('@/views/qna/QnaInfoList.vue')
+        component: HomeView
     },
     {
         path: '/about',
@@ -39,8 +38,7 @@ const routes = [{
     {
         path: '/csr/login',
         name: 'login',
-        component: () =>
-            import ('@/views/csr/Login.vue')
+        component: HomeView
     },
     {
         path: '/csr/qnalist',
@@ -61,6 +59,17 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    const protectedRoutes = ['csrQnaList', 'csrQnaDetail']
+
+    if (protectedRoutes.includes(to.name) && !localStorage.getItem('accessToken')) {
+        next({ name: 'home' })
+        return
+    }
+
+    next()
 })
 
 export default router

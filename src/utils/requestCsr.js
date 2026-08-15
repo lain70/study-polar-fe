@@ -1,7 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
 import envs from '@/envs'
-import store from '@/store'
 
 var baseUrl = envs.buildUrl
 if (process.env.NODE_ENV === 'development') {
@@ -30,30 +29,27 @@ service.interceptors.request.use(
     error => {
         // 에러가 날경우 진행 부분
         console.log(error) // for debug
-        Promise.reject(error)
+        return Promise.reject(error)
     }
 )
 
 // axios의 response 인터셉터
 service.interceptors.response.use(
     response => {
-        console.log(response)
-        if (response.status === 401 || response.status === 406) {
-            if (response.data && response.data.ERROR_MSG) {
-                alert(response.data.ERROR_MSG)
-            } else {
-                alert('권한이 없습니다.')
-            }
-
-            router.push({
-                name: "login",
-            });
-        }
         return response
     },
     error => {
-        return error.response
-        const originalRequest = error.config
+        if (error.response && (error.response.status === 401 || error.response.status === 406)) {
+            const isLoginRequest = error.config && error.config.url === '/auth/login'
+
+            if (!isLoginRequest) {
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+                router.push({ name: 'home' })
+            }
+        }
+
+        return Promise.reject(error)
     }
 )
 
