@@ -78,21 +78,30 @@
         <div class="section-heading">
           <div>
             <p class="section-kicker">CUSTOMER'S PICK</p>
-            <h2>이번 주 인기 상품</h2>
+            <h2>지금 만나볼 수 있는 상품</h2>
           </div>
-          <span>상품 데이터는 준비 중입니다</span>
+          <span>판매중 · 품절 상품</span>
         </div>
 
-        <div class="product-grid" aria-label="상품 준비 중">
-          <article v-for="item in previewItems" :key="item.name" class="product-card">
-            <div class="product-image" :class="item.color">
-              <span>POLAR<br>BEAR</span>
+        <p v-if="isLoadingProducts" class="product-message">상품을 불러오는 중입니다.</p>
+        <p v-else-if="productError" class="product-message product-message--error" role="alert">{{ productError }}</p>
+        <div v-else-if="products.length" class="product-grid" aria-label="판매 상품">
+          <article v-for="product in products" :key="product.productNo" class="product-card">
+            <div class="product-image">
+              <img v-if="product.representativeImageUrl" :src="imageUrl(product.representativeImageUrl)" :alt="product.productNameKo">
+              <span v-else>POLAR<br>BEAR</span>
             </div>
-            <p class="product-category">{{ item.category }}</p>
-            <h3>{{ item.name }}</h3>
-            <p class="product-status">COMING SOON</p>
+            <p class="product-category">{{ product.brandName || 'POLAR BEAR' }} · {{ product.categoryName }}</p>
+            <h3>{{ product.productNameKo }}</h3>
+            <p v-if="product.productNameEn" class="product-name-en">{{ product.productNameEn }}</p>
+            <div class="product-price">
+              <strong>{{ currency(product.discountPrice == null ? product.salePrice : product.discountPrice) }}</strong>
+              <del v-if="hasDiscount(product)">{{ currency(product.salePrice) }}</del>
+            </div>
+            <p class="product-status" :class="{ 'product-status--sold-out': product.productStatus === 'SOLD_OUT' }">{{ product.productStatus === 'SOLD_OUT' ? '품절' : '판매중' }}</p>
           </article>
         </div>
+        <p v-else class="product-message">현재 판매중인 상품이 없습니다.</p>
       </section>
 
       <section class="support-banner">
@@ -120,16 +129,16 @@
 </template>
 
 <script>
+import { getFeaturedProducts } from '@/api/product'
+import envs from '@/envs'
+
 export default {
   name: 'MainView',
   data () {
     return {
-      previewItems: [
-        { category: 'DAILY', name: 'Polar Daily Item', color: 'product-image--mint' },
-        { category: 'LIVING', name: 'Warm Living Item', color: 'product-image--sand' },
-        { category: 'GIFT', name: 'Member Gift Set', color: 'product-image--navy' },
-        { category: 'SEASON', name: 'Seasonal Collection', color: 'product-image--ice' }
-      ],
+      products: [],
+      isLoadingProducts: false,
+      productError: '',
       isAuthenticated: Boolean(localStorage.getItem('accessToken')),
       isLoggingOut: false,
       logoutError: ''
@@ -144,7 +153,33 @@ export default {
       return this.isLoggingOut ? '로그아웃 중' : '로그아웃'
     }
   },
+  created () {
+    this.loadProducts()
+  },
   methods: {
+    loadProducts () {
+      this.isLoadingProducts = true
+      this.productError = ''
+      getFeaturedProducts()
+        .then(({ data }) => {
+          this.products = data
+        })
+        .catch(() => {
+          this.productError = '상품을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
+        })
+        .finally(() => {
+          this.isLoadingProducts = false
+        })
+    },
+    imageUrl (path) {
+      return `${envs.apiBaseUrl.replace(/\/api$/, '')}${path}`
+    },
+    currency (value) {
+      return `${Number(value || 0).toLocaleString('ko-KR')}원`
+    },
+    hasDiscount (product) {
+      return product.discountPrice != null && Number(product.discountPrice) < Number(product.salePrice)
+    },
     editUserInfo () {
       this.$router.push({ name: 'userPasswordConfirm' })
     },
@@ -479,7 +514,7 @@ export default {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
@@ -496,22 +531,14 @@ export default {
   font-size: clamp(24px, 3vw, 40px);
   line-height: 0.9;
   text-align: center;
+  background: #e5edeb;
+  overflow: hidden;
 }
 
-.product-image--mint {
-  background: linear-gradient(145deg, #adc8c3, #527a75);
-}
-
-.product-image--sand {
-  background: linear-gradient(145deg, #ddceb3, #9c8666);
-}
-
-.product-image--navy {
-  background: linear-gradient(145deg, #71878d, #233f46);
-}
-
-.product-image--ice {
-  background: linear-gradient(145deg, #dcebea, #91aca9);
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .product-category {
@@ -528,11 +555,49 @@ export default {
   font-weight: 600;
 }
 
+.product-name-en {
+  min-height: 28px;
+  margin: 5px 0 0;
+  color: #879694;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.product-price {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.product-price strong {
+  font-size: 14px;
+}
+
+.product-price del {
+  color: #9ba8a7;
+  font-size: 10px;
+}
+
 .product-status {
   margin: 10px 0 0;
   color: #97a4a5;
   font-size: 10px;
   letter-spacing: 0.12em;
+}
+
+.product-status--sold-out {
+  color: #a35252;
+}
+
+.product-message {
+  padding: 48px 0;
+  color: #7d8f8d;
+  text-align: center;
+}
+
+.product-message--error {
+  color: #b14949;
 }
 
 .support-banner {
@@ -638,7 +703,7 @@ export default {
   }
 
   .product-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .support-banner {
@@ -701,6 +766,7 @@ export default {
   }
 
   .product-grid {
+    grid-template-columns: repeat(2, 1fr);
     gap: 30px 12px;
   }
 

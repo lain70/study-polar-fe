@@ -26,7 +26,25 @@ service.interceptors.request.use(config => {
 
 service.interceptors.response.use(
   response => response,
-  error => Promise.reject(error)
+  error => {
+    const status = error.response && error.response.status
+    const requestUrl = error.config && error.config.url
+    const isLoginRequest = requestUrl === '/admin/auth/login'
+
+    if (!isLoginRequest && [401, 403, 406].includes(status)) {
+      localStorage.removeItem('adminAccessToken')
+      localStorage.removeItem('adminRefreshToken')
+      localStorage.removeItem('adminName')
+      localStorage.removeItem('adminDepartment')
+      localStorage.removeItem('adminPosition')
+
+      if (window.location.pathname !== '/admin/login') {
+        window.location.replace('/admin/login')
+      }
+    }
+
+    return Promise.reject(error)
+  }
 )
 
 export default service
