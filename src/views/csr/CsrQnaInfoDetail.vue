@@ -193,56 +193,55 @@
 </template>
 
 <script>
-import { getCsrQnaDetail,registCsrQnaReply, updateCsrQnaReply } from '@/api/csr.js'
+import { getCsrQnaDetail, registCsrQnaReply, updateCsrQnaReply } from '@/api/csr.js'
 export default {
-	name: 'QnaInfoList',
-	props: {
+  name: 'QnaInfoList',
+  props: {
 
-	},
-	components: {
-	},
-	computed:{
-		qnaData(){
-			let qnaData = this.data;
-			qnaData.regDate = qnaData.regDate?qnaData.regDate.replace('T', ' '):qnaData.regDate
-			qnaData.replyUpdtDate = qnaData.replyUpdtDate?qnaData.replyUpdtDate.replace('T', ' '):qnaData.replyUpdtDate
-			return qnaData;
-		}
-	},
-	data () {
-		return {
-			data: [],
-			selQnaNo:'',
-			selQnaUserId: '',
-			selPageNum:'',
+  },
+  components: {
+  },
+  computed: {
+    qnaData () {
+      const qnaData = this.data
+      qnaData.regDate = qnaData.regDate ? qnaData.regDate.replace('T', ' ') : qnaData.regDate
+      qnaData.replyUpdtDate = qnaData.replyUpdtDate ? qnaData.replyUpdtDate.replace('T', ' ') : qnaData.replyUpdtDate
+      return qnaData
+    }
+  },
+  data () {
+    return {
+      data: [],
+      selQnaNo: '',
+      selQnaUserId: '',
+      selPageNum: ''
     	}
-	},
-	created(){
-		console.log(!localStorage.getItem('accessToken'))
-		if(localStorage.getItem('accessToken')){
-			alert('잘못된 접근입니다.');
-			this.$router.push({
-					name:"login",
-				});
-		}
-		if(this.$route.query.selQnaNo){
-			this.selQnaNo = this.$route.query.selQnaNo;
-		}
+  },
+  created () {
+    console.log(!localStorage.getItem('accessToken'))
+    if (localStorage.getItem('accessToken')) {
+      alert('잘못된 접근입니다.')
+      this.$router.push({
+        name: 'login'
+      })
+    }
+    if (this.$route.query.selQnaNo) {
+      this.selQnaNo = this.$route.query.selQnaNo
+    }
 
-		if(this.$route.query.selQnaUserId){
-			this.selQnaUserId = this.$route.query.selQnaUserId;
-		}
+    if (this.$route.query.selQnaUserId) {
+      this.selQnaUserId = this.$route.query.selQnaUserId
+    }
 
-		if(this.$route.query.selPageNum){
-			this.selPageNum = this.$route.query.selPageNum
-		}
+    if (this.$route.query.selPageNum) {
+      this.selPageNum = this.$route.query.selPageNum
+    }
 
-		if(this.selQnaNo){
-			this.fn_getQnaInfoDetail();
-		}
-
-	},
-	activated(){
+    if (this.selQnaNo) {
+      this.fn_getQnaInfoDetail()
+    }
+  },
+  activated () {
 
   },
 
@@ -251,107 +250,106 @@ export default {
   },
 
   methods: {
-	  fn_getQnaInfoDetail(){
-		  let params ={
-			  qnaNo : this.selQnaNo,
-			  qnaUserId : this.selQnaUserId
+	  fn_getQnaInfoDetail () {
+		  const params = {
+			  qnaNo: this.selQnaNo,
+			  qnaUserId: this.selQnaUserId
 		  }
 
 		  console.log(params)
-		getCsrQnaDetail(params).then(res =>{
-
-			if(res){
-				  if(res.status && res.status === 200){
+      getCsrQnaDetail(params).then(res => {
+        if (res) {
+				  if (res.status && res.status === 200) {
 					  console.log(res.data)
-					this.data = res.data
-				}else{
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
+            this.data = res.data
+          } else {
+            if (res.data && res.data.ERROR_MSG) {
+              alert(res.data.ERROR_MSG)
+            } else {
+              alert('시스템 오류가 발생하였습니다.')
+            }
+          }
 			  }
-		})
+      })
 	  },
 
-	  fn_saveQnaReply(){
-		  if(!this.qnaData.csrNo){
-			  alert('담당자가 지정되어 있지 않습니다.');
+	  fn_saveQnaReply () {
+		  if (!this.qnaData.csrNo) {
+			  alert('담당자가 지정되어 있지 않습니다.')
 			  return
 		  }
 
-		  if(!this.qnaData.qnaReplyContents){
-			  alert('문의 내용을 입력하여 주세요.');
+		  if (!this.qnaData.qnaReplyContents) {
+			  alert('문의 내용을 입력하여 주세요.')
 			  return
 		  }
 
-		  let params ={
+		  const params = {
 			  qnaNo: this.selQnaNo,
 			  qnaUserId: this.qnaData.qnaUserId,
 			  qnaReplyContents: this.qnaData.qnaReplyContents
 		  }
 
 		  console.log(params)
-		  registCsrQnaReply(params).then(res =>{
+		  registCsrQnaReply(params).then(res => {
 			  console.log(res)
-			  if(res){
-				  if(res.status && res.status === 200){
-					alert('정상 저장 되었습니다.');
-					this.fn_getQnaInfoDetail();
-				}else{
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
+			  if (res) {
+				  if (res.status && res.status === 200) {
+            alert('정상 저장 되었습니다.')
+            this.fn_getQnaInfoDetail()
+          } else {
+            if (res.data && res.data.ERROR_MSG) {
+              alert(res.data.ERROR_MSG)
+            } else {
+              alert('시스템 오류가 발생하였습니다.')
+            }
+          }
 			  }
 		  })
 	  },
 
-	  fn_updateQnaReply(){
-		  if(!this.qnaData.answerYn || this.qnaData.answerYn === 'N'){
-			  alert('담당자가 지정되어 있지 않습니다.');
+	  fn_updateQnaReply () {
+		  if (!this.qnaData.answerYn || this.qnaData.answerYn === 'N') {
+			  alert('담당자가 지정되어 있지 않습니다.')
 			  return
 		  }
 
-		  if(!this.qnaData.qnaReplyContents){
-			  alert('문의 내용을 입력하여 주세요.');
+		  if (!this.qnaData.qnaReplyContents) {
+			  alert('문의 내용을 입력하여 주세요.')
 			  return
 		  }
 
-		  let params ={
+		  const params = {
 			  qnaNo: this.selQnaNo,
 			  qnaReplyNo: this.qnaData.qnaReplyNo,
 			  qnaUserId: this.qnaData.qnaUserId,
 			  qnaReplyContents: this.qnaData.qnaReplyContents
 		  }
 
-		  updateCsrQnaReply(params).then(res =>{
+		  updateCsrQnaReply(params).then(res => {
 			  console.log(res)
-			  if(res){
-				  if(res.status && res.status === 200){
-					alert('정상 저장 되었습니다.');
-					this.fn_getQnaInfoDetail();
-				}else{
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
+			  if (res) {
+				  if (res.status && res.status === 200) {
+            alert('정상 저장 되었습니다.')
+            this.fn_getQnaInfoDetail()
+          } else {
+            if (res.data && res.data.ERROR_MSG) {
+              alert(res.data.ERROR_MSG)
+            } else {
+              alert('시스템 오류가 발생하였습니다.')
+            }
+          }
 			  }
 		  })
 	  },
 
-	  fn_goCsrQnaList(){
-		this.$router.push({
-			name:"csrQnaList",
-			query:{
-				selPageNum: this.selPageNum?this.selPageNum:1
-			}
-		});
+	  fn_goCsrQnaList () {
+      this.$router.push({
+        name: 'csrQnaList',
+        query: {
+          selPageNum: this.selPageNum ? this.selPageNum : 1
+        }
+      })
 	  }
   }
 }

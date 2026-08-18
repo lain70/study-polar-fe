@@ -180,221 +180,212 @@ import { getCsrQnaList, registCsrNoInfo, checkQnaCsrNo } from '@/api/csr.js'
 import store from '@/store'
 
 export default {
-	name: 'QnaInfoList',
-	props: {
+  name: 'QnaInfoList',
+  props: {
 
-	},
-	components: {
-	},
-	computed:{
-	},
-	data () {
-		return {
-			qnaDataList: [],
-			totalCnt: 0,
-			totalPageCnt: 0,
-			//페이징 처리 영역
-			startNumber: 0,
-			pageCount: 10,
-			selPage: 1,
+  },
+  components: {
+  },
+  computed: {
+  },
+  data () {
+    return {
+      qnaDataList: [],
+      totalCnt: 0,
+      totalPageCnt: 0,
+      // 페이징 처리 영역
+      startNumber: 0,
+      pageCount: 10,
+      selPage: 1,
 
-			nowPage:{
-				color: 'red'
-			},
+      nowPage: {
+        color: 'red'
+      },
 
-			polling: null,
-			pollingYn: false
+      polling: null,
+      pollingYn: false
     	}
-	},
-	created(){
-		if(!localStorage.getItem('accessToken')){
-			alert('잘못된 접근입니다.');
-			this.$router.push({
-					name:"login",
-				});
-		}
+  },
+  created () {
+    if (!localStorage.getItem('accessToken')) {
+      alert('잘못된 접근입니다.')
+      this.$router.push({
+        name: 'login'
+      })
+    }
 
-		this.fn_autoSelectQnaInfo();
-	},
-	activated(){
+    this.fn_autoSelectQnaInfo()
+  },
+  activated () {
 
   },
 
   mounted () {
 
   },
-  destroyed(){
-	  this.fn_autoQnaInfoOff();
+  destroyed () {
+	  this.fn_autoQnaInfoOff()
   },
 
   methods: {
-	  fn_autoQnaInfoOff(){
-		  this.pollingYn = false;
+	  fn_autoQnaInfoOff () {
+		  this.pollingYn = false
 		  clearInterval(this.polling)
 	  },
 
-	  fn_autoSelectQnaInfo (){
-		  if(this.polling != null){
+	  fn_autoSelectQnaInfo () {
+		  if (this.polling != null) {
 			  this.polling = null
 		  }
-		  this.pollingYn = true;
-		  this.fn_getQnaInfoList();
+		  this.pollingYn = true
+		  this.fn_getQnaInfoList()
 		  this.polling = setInterval(() => {
-			  this.startNumber = 0;
-			  this.selPage = 1;
-			  this.fn_getQnaInfoList();
+			  this.startNumber = 0
+			  this.selPage = 1
+			  this.fn_getQnaInfoList()
 		  }, 10000)
 	  },
 
-	  fnCheckAll(id, e){
-			this.qnaDataList.forEach(item => {
-				if(id === item.qnaNo){
-					item.checked = true
-				}
-			});
-		},
+	  fnCheckAll (id, e) {
+      this.qnaDataList.forEach(item => {
+        if (id === item.qnaNo) {
+          item.checked = true
+        }
+      })
+    },
 
-
-
-	  fn_getQnaInfoList(){
-		  this.startNumber = (this.selPage-1) * this.pageCount;
-		  let params ={
-			  startNum : this.startNumber,
-			  pageCnt : this.pageCount
+	  fn_getQnaInfoList () {
+		  this.startNumber = (this.selPage - 1) * this.pageCount
+		  const params = {
+			  startNum: this.startNumber,
+			  pageCnt: this.pageCount
 		  }
 
-		  getCsrQnaList(params).then(res =>{
-			  console.log(res);
-			  if(res.status && res.status === 200){
-					this.qnaDataList = res.data;
-					this.qnaDataList.forEach((item, idx) => {
-						if(item.csrNo){
-							item.checked = true
-						}else{
-							item.checked = false
-						}
+		  getCsrQnaList(params).then(res => {
+			  console.log(res)
+			  if (res.status && res.status === 200) {
+          this.qnaDataList = res.data
+          this.qnaDataList.forEach((item, idx) => {
+            if (item.csrNo) {
+              item.checked = true
+            } else {
+              item.checked = false
+            }
 
-						item.index = idx
-					})
+            item.index = idx
+          })
 
-					this.totalCnt = parseInt(res.headers['x-total-count'])
-							this.fn_calPaging();
-				}else{
-					clearInterval(this.polling)
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
-
+          this.totalCnt = parseInt(res.headers['x-total-count'])
+          this.fn_calPaging()
+        } else {
+          clearInterval(this.polling)
+          if (res.data && res.data.ERROR_MSG) {
+            alert(res.data.ERROR_MSG)
+          } else {
+            alert('시스템 오류가 발생하였습니다.')
+          }
+        }
 		  }).catch(err => {
 			  clearInterval(this.polling)
 		  })
 
-		this.fn_calPaging();
-
+      this.fn_calPaging()
 	  },
 
-	  fn_saveQnaCsrInfo(){
-		  let qnaNoList = []
-		  let qnaUserIdList = []
-		this.qnaDataList.forEach(item => {
-			if(item.answerYn === 'N' && item.checked){
-				qnaNoList.push(item.qnaNo)
-				qnaUserIdList.push(item.qnaUserId)
-			}
-		});
+	  fn_saveQnaCsrInfo () {
+		  const qnaNoList = []
+		  const qnaUserIdList = []
+      this.qnaDataList.forEach(item => {
+        if (item.answerYn === 'N' && item.checked) {
+          qnaNoList.push(item.qnaNo)
+          qnaUserIdList.push(item.qnaUserId)
+        }
+      })
 
-		if(qnaNoList.length < 1){
-			alert('선택된 1:1문의가 없습니다.');
-			return;
-		}
+      if (qnaNoList.length < 1) {
+        alert('선택된 1:1문의가 없습니다.')
+        return
+      }
 
-		console.log(qnaNoList)
-		  let params ={
-			  qnaNoList:qnaNoList.join(','),
-			  qnaUserIdList:qnaUserIdList.join(',')
+      console.log(qnaNoList)
+		  const params = {
+			  qnaNoList: qnaNoList.join(','),
+			  qnaUserIdList: qnaUserIdList.join(',')
 
 		  }
 
-		  registCsrNoInfo(params).then(res =>{
+		  registCsrNoInfo(params).then(res => {
 			  console.log(res)
-			  if(res){
-				  if(res.status && res.status === 200){
-					alert('정상 저장 되었습니다.');
-					this.fn_getQnaInfoList();
-				}else{
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
+			  if (res) {
+				  if (res.status && res.status === 200) {
+            alert('정상 저장 되었습니다.')
+            this.fn_getQnaInfoList()
+          } else {
+            if (res.data && res.data.ERROR_MSG) {
+              alert(res.data.ERROR_MSG)
+            } else {
+              alert('시스템 오류가 발생하였습니다.')
+            }
+          }
 			  }
 		  })
-
 	  },
 
-	  fn_logout(){
-		  let params ={}
+	  fn_logout () {
+		  const params = {}
 		  store.dispatch('CsrLogoutProc', params).then(response => {
-
-			  if(response){
+			  if (response) {
 				  alert('로그아웃 되었습니다.')
 				  this.$router.push({
-					name:"login",
-				});
+            name: 'login'
+          })
 			  }
 		  })
 	  },
 
-	fn_calPaging(){
-		  if(this.totalCnt % this.pageCount > 0){
+    fn_calPaging () {
+		  if (this.totalCnt % this.pageCount > 0) {
 			  this.totalPageCnt = parseInt(this.totalCnt / this.pageCount) + 1
-		  }else{
+		  } else {
 			  this.totalPageCnt = parseInt(this.totalCnt / this.pageCount) + 1
 		  }
-
 	  },
 
-	  fn_clickPaging(page){
-		  if(page < 1 || page > this.totalPageCnt){
-			  return;
+	  fn_clickPaging (page) {
+		  if (page < 1 || page > this.totalPageCnt) {
+			  return
 		  }
 		  console.log(page)
 		  this.selPage = page
-		  this.fn_getQnaInfoList();
+		  this.fn_getQnaInfoList()
 	  },
 
-	  fn_goToPage(qnaNo, qnaUserId){
-		let params ={
-			qnaNo: qnaNo,
-			qnaUserId: qnaUserId
-		}
+	  fn_goToPage (qnaNo, qnaUserId) {
+      const params = {
+        qnaNo: qnaNo,
+        qnaUserId: qnaUserId
+      }
 
-		checkQnaCsrNo(params).then(res =>{
-			if(res){
-				  if(res.status && res.status === 200){
-					this.$router.push({
-						name:"csrQnaDetail",
-						query:{
-							selQnaNo: qnaNo?qnaNo:'',
-							selQnaUserId: qnaUserId?qnaUserId:'',
-							selPageNum: this.selPage?this.selPage:1
-						}
-					});
-				}else{
-					if(res.data && res.data.ERROR_MSG){
-						alert(res.data.ERROR_MSG)
-					}else{
-						alert('시스템 오류가 발생하였습니다.')
-					}
-				}
+      checkQnaCsrNo(params).then(res => {
+        if (res) {
+				  if (res.status && res.status === 200) {
+            this.$router.push({
+              name: 'csrQnaDetail',
+              query: {
+                selQnaNo: qnaNo || '',
+                selQnaUserId: qnaUserId || '',
+                selPageNum: this.selPage ? this.selPage : 1
+              }
+            })
+          } else {
+            if (res.data && res.data.ERROR_MSG) {
+              alert(res.data.ERROR_MSG)
+            } else {
+              alert('시스템 오류가 발생하였습니다.')
+            }
+          }
 			  }
-		})
-
-
+      })
 	  }
   }
 }

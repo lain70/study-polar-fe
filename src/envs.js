@@ -1,5 +1,4 @@
 export default {
-    buildUrl: '/api',
-    localUrl: 'http://localhost:8080/api',
-    serviceKey: process.env.VUE_APP_SERVICE_KEY
+  apiBaseUrl: process.env.VUE_APP_API_BASE_URL,
+  serviceKey: process.env.VUE_APP_SERVICE_KEY
 }

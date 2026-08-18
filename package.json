@@ -3,9 +3,11 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "start": "vue-cli-service serve",
-        "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build --mode development",
+        "start": "vue-cli-service serve --mode loc",
+        "serve": "vue-cli-service serve --mode loc",
+        "build": "vue-cli-service build --mode prd",
+        "build:loc": "vue-cli-service build --mode loc",
+        "build:prd": "vue-cli-service build --mode prd",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {

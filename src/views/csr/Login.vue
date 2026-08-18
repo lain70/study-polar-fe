@@ -30,9 +30,9 @@ import store from '@/store'
 export default {
   data () {
     return {
-		checkSaveId: false,
-		tempCsrId: '',
-		tempCsrPwd: ''
+      checkSaveId: false,
+      tempCsrId: '',
+      tempCsrPwd: ''
     }
   },
   filters: {
@@ -42,7 +42,7 @@ export default {
   watch: {
 
   },
-  created (){
+  created () {
 
   },
   mounted () {
@@ -52,23 +52,22 @@ export default {
   beforeDestroy () {
   },
   methods: {
-	  fn_csrLogin(){
-
-		  let params ={
+	  fn_csrLogin () {
+		  const params = {
 			  csrId: this.tempCsrId,
 			  csrPwd: this.tempCsrPwd,
-			  type:'CSR'
+			  type: 'CSR'
 		  }
 
 		  store.dispatch('CsrLoginProc', params).then(response => {
 			  console.log(response)
-			  if(response){
+			  if (response) {
 				  this.$router.push({
-					name:"csrQnaList",
-					query:{
-						selPageNum: 1
-					}
-				});
+            name: 'csrQnaList',
+            query: {
+              selPageNum: 1
+            }
+          })
 			  }
 		  })
 	  }
