@@ -58,6 +58,11 @@
           </button>
         </form>
 
+        <p class="signup-link">
+          아직 계정이 없으신가요?
+          <router-link :to="{ name: 'userJoin' }">회원가입</router-link>
+        </p>
+
         <p class="security-note">
           <span aria-hidden="true">●</span>
           Spring Security로 인증 정보를 확인합니다.
@@ -92,16 +97,14 @@ export default {
 
       this.isSubmitting = true
       const loginRequest = {
-        csrId: this.userId,
-        csrPwd: this.password,
-        type: 'CSR'
+        userId: this.userId,
+        userPwd: this.password
       }
 
-      this.$store.dispatch('CsrLoginProc', loginRequest)
+      this.$store.dispatch('UserLoginProc', loginRequest)
         .then(() => {
           this.$router.push({
-            name: 'csrQnaList',
-            query: { selPageNum: 1 }
+            name: 'main'
           })
         })
         .catch(error => {
@@ -340,6 +343,21 @@ export default {
   color: #b14949;
   font-size: 12px;
   line-height: 1.5;
+}
+
+.signup-link {
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.signup-link a {
+  margin-left: 6px;
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .security-note {
