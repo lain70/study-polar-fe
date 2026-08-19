@@ -25,33 +25,6 @@ const routes = [{
     import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
 },
 {
-  path: '/admin/login',
-  name: 'adminLogin',
-  component: () =>
-    import('@/views/admin/AdminLoginView.vue')
-},
-{
-  path: '/admin',
-  name: 'adminDashboard',
-  component: () =>
-    import('@/views/admin/AdminDashboardView.vue')
-},
-{
-  path: '/admin/goods',
-  name: 'adminGoodsList',
-  component: () => import('@/views/admin/goods/AdminGoodsListView.vue')
-},
-{
-  path: '/admin/goods/new',
-  name: 'adminGoodsCreate',
-  component: () => import('@/views/admin/goods/AdminGoodsCreateView.vue')
-},
-{
-  path: '/admin/goods/:goodsNo',
-  name: 'adminGoodsDetail',
-  component: () => import('@/views/admin/goods/AdminGoodsDetailView.vue')
-},
-{
   path: '/customer/qnalist',
   name: 'qnaList',
   component: () =>
@@ -123,18 +96,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const protectedRoutes = ['csrInquiry', 'qnaList', 'qnaDetail', 'csrQnaList', 'csrQnaDetail', 'userPasswordConfirm', 'userInfoEdit']
-  const adminProtectedRoutes = ['adminDashboard', 'adminGoodsList', 'adminGoodsCreate', 'adminGoodsDetail']
-
-  if (adminProtectedRoutes.includes(to.name) && !localStorage.getItem('adminAccessToken')) {
-    next({ name: 'adminLogin' })
-    return
-  }
-
-  if (to.name === 'adminLogin' && localStorage.getItem('adminAccessToken')) {
-    next({ name: 'adminDashboard' })
-    return
-  }
-
   if (to.name === 'userLogin' && localStorage.getItem('accessToken')) {
     next({ name: 'main' })
     return
