@@ -1,7 +1,7 @@
 import axios from 'axios'
 import envs from '@/envs'
 
-const productApi = axios.create({
+const goodsApi = axios.create({
   baseURL: envs.apiBaseUrl,
   timeout: 30000,
   headers: {
@@ -10,6 +10,6 @@ const productApi = axios.create({
   }
 })
 
-export function getFeaturedProducts () {
-  return productApi.get('/products/featured')
+export function getFeaturedGoods () {
+  return goodsApi.get('/goods/featured')
 }
