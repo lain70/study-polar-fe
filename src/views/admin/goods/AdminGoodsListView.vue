@@ -1,17 +1,17 @@
 <template>
-  <admin-product-layout title="상품 목록">
+  <admin-goods-layout title="상품 목록">
     <section class="search-panel">
-      <form @submit.prevent="searchProducts">
+      <form @submit.prevent="searchGoods">
         <div class="primary-filters">
-          <label>검색 조건<select v-model="searchType"><option value="PRODUCT_NO">상품번호</option><option value="PRODUCT_NAME">상품명</option><option value="PRODUCT_CODE">상품 코드</option></select></label>
-          <label class="keyword-field">검색어<input v-model.trim="keyword" :type="searchType === 'PRODUCT_NO' ? 'number' : 'text'" :placeholder="keywordPlaceholder"></label>
+          <label>검색 조건<select v-model="searchType"><option value="GOODS_NO">상품번호</option><option value="GOODS_NAME">상품명</option><option value="GOODS_CODE">상품 코드</option></select></label>
+          <label class="keyword-field">검색어<input v-model.trim="keyword" :type="searchType === 'GOODS_NO' ? 'number' : 'text'" :placeholder="keywordPlaceholder"></label>
           <label>등록 시작일시<input v-model="registeredFrom" type="datetime-local"></label>
           <label>등록 종료일시<input v-model="registeredTo" type="datetime-local"></label>
         </div>
         <div class="advanced-filters">
           <details><summary>상품 상태 <span>{{ selectedStatuses.length ? `${selectedStatuses.length}개 선택` : '전체' }}</span></summary><div class="checkbox-list"><label v-for="status in statusOptions" :key="status.value"><input v-model="selectedStatuses" type="checkbox" :value="status.value">{{ status.label }}</label></div></details>
-          <details><summary>브랜드 <span>{{ selectedBrands.length ? `${selectedBrands.length}개 선택` : '전체' }}</span></summary><div class="checkbox-list"><label v-for="brand in brandOptions" :key="brand"><input v-model="selectedBrands" type="checkbox" :value="brand">{{ brand }}</label><p v-if="!brandOptions.length">등록된 브랜드가 없습니다.</p></div></details>
-          <details><summary>카테고리 <span>{{ selectedCategories.length ? `${selectedCategories.length}개 선택` : '전체' }}</span></summary><div class="checkbox-list"><label v-for="category in categoryOptions" :key="category"><input v-model="selectedCategories" type="checkbox" :value="category">{{ category }}</label><p v-if="!categoryOptions.length">등록된 카테고리가 없습니다.</p></div></details>
+          <details><summary>브랜드 <span>{{ selectedBrandNos.length ? `${selectedBrandNos.length}개 선택` : '전체' }}</span></summary><div class="checkbox-list"><label v-for="brand in brandOptions" :key="brand.brandNo"><input v-model="selectedBrandNos" type="checkbox" :value="brand.brandNo">{{ brand.brandNameKo }}</label><p v-if="!brandOptions.length">등록된 브랜드가 없습니다.</p></div></details>
+          <details><summary>카테고리 <span>{{ selectedCategoryNos.length ? `${selectedCategoryNos.length}개 선택` : '전체' }}</span></summary><div class="checkbox-list"><label v-for="category in categoryOptions" :key="category.categoryNo"><input v-model="selectedCategoryNos" type="checkbox" :value="category.categoryNo">{{ category.categoryName }}</label><p v-if="!categoryOptions.length">등록된 카테고리가 없습니다.</p></div></details>
         </div>
         <div class="search-actions"><button type="button" class="reset-button" @click="resetFilters">초기화</button><button type="submit">상품 조회</button></div>
       </form>
@@ -21,21 +21,21 @@
       <div><strong>상품 조회 결과</strong><span>총 {{ totalCount }}개</span></div>
       <div class="result-actions">
         <label>목록 표시<select v-model.number="pageSize" @change="changePageSize"><option :value="20">20개</option><option :value="50">50개</option><option :value="100">100개</option></select></label>
-        <router-link :to="{ name: 'adminProductCreate' }">상품 등록</router-link>
+        <router-link :to="{ name: 'adminGoodsCreate' }">상품 등록</router-link>
       </div>
     </section>
     <div class="table-wrap">
       <table>
         <thead><tr><th>이미지</th><th>상품번호</th><th>상품명</th><th>브랜드/카테고리</th><th>판매자</th><th>판매가</th><th>상태</th><th>전시</th></tr></thead>
         <tbody>
-          <tr v-for="product in products" :key="product.productNo">
-            <td><img v-if="product.representativeImageUrl" :src="imageUrl(product.representativeImageUrl)" :alt="product.productNameKo"><span v-else class="no-image">NO IMAGE</span></td>
-            <td><router-link :to="{ name: 'adminProductDetail', params: { productNo: product.productNo } }">{{ product.productNo }}</router-link></td>
-            <td><router-link :to="{ name: 'adminProductDetail', params: { productNo: product.productNo } }"><strong>{{ product.productNameKo }}</strong><small>{{ product.productNameEn }}</small></router-link></td>
-            <td>{{ product.brandName || '-' }}<small>{{ product.categoryName }}</small></td><td>{{ product.sellerName }}</td>
-            <td>{{ currency(product.discountPrice || product.salePrice) }}</td><td>{{ statusLabel(product.productStatus) }}</td><td>{{ product.displayYn === 'Y' ? '전시' : '미전시' }}</td>
+          <tr v-for="goods in goods" :key="goods.goodsNo">
+            <td><img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo"><span v-else class="no-image">NO IMAGE</span></td>
+            <td><router-link :to="{ name: 'adminGoodsDetail', params: { goodsNo: goods.goodsNo } }">{{ goods.goodsNo }}</router-link></td>
+            <td><router-link :to="{ name: 'adminGoodsDetail', params: { goodsNo: goods.goodsNo } }"><strong>{{ goods.goodsNameKo }}</strong><small>{{ goods.goodsNameEn }}</small></router-link></td>
+            <td>{{ goods.brandNameKo || '-' }}<small>{{ goods.categoryName }}</small></td><td>{{ goods.sellerName }}</td>
+            <td>{{ currency(goods.discountPrice || goods.salePrice) }}</td><td>{{ statusLabel(goods.goodsStatus) }}</td><td>{{ goods.displayYn === 'Y' ? '전시' : '미전시' }}</td>
           </tr>
-          <tr v-if="!isLoading && !products.length"><td colspan="8" class="empty">등록된 상품이 없습니다.</td></tr>
+          <tr v-if="!isLoading && !goods.length"><td colspan="8" class="empty">등록된 상품이 없습니다.</td></tr>
         </tbody>
       </table>
     </div>
@@ -44,24 +44,24 @@
       <button v-for="pageNumber in visiblePageNumbers" :key="pageNumber" type="button" :class="{ active: currentPage === pageNumber }" :aria-current="currentPage === pageNumber ? 'page' : null" @click="changePage(pageNumber)">{{ pageNumber }}</button>
       <button type="button" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">다음</button>
     </nav>
-  </admin-product-layout>
+  </admin-goods-layout>
 </template>
 <script>
-import AdminProductLayout from '@/components/admin/AdminProductLayout.vue'
-import { getAdminProducts } from '@/api/admin.js'
+import AdminGoodsLayout from '@/components/admin/AdminGoodsLayout.vue'
+import { getAdminGoodsList } from '@/api/admin.js'
 import envs from '@/envs'
 export default {
-  name: 'AdminProductListView',
-  components: { AdminProductLayout },
+  name: 'AdminGoodsListView',
+  components: { AdminGoodsLayout },
   data: () => ({
-    products: [],
-    searchType: 'PRODUCT_NAME',
+    goods: [],
+    searchType: 'GOODS_NAME',
     keyword: '',
     registeredFrom: '',
     registeredTo: '',
     selectedStatuses: [],
-    selectedBrands: [],
-    selectedCategories: [],
+    selectedBrandNos: [],
+    selectedCategoryNos: [],
     brandOptions: [],
     categoryOptions: [],
     statusOptions: [
@@ -79,7 +79,7 @@ export default {
   }),
   computed: {
     keywordPlaceholder () {
-      return { PRODUCT_NO: '상품번호 입력', PRODUCT_NAME: '한글 또는 영문 상품명 입력', PRODUCT_CODE: '상품 코드 입력' }[this.searchType]
+      return { GOODS_NO: '상품번호 입력', GOODS_NAME: '한글 또는 영문 상품명 입력', GOODS_CODE: '상품 코드 입력' }[this.searchType]
     },
     totalPages () {
       return Math.max(1, Math.ceil(this.totalCount / this.pageSize))
@@ -90,56 +90,56 @@ export default {
       return Array.from({ length: pageCount }, (_, index) => startPage + index)
     }
   },
-  created () { this.loadProducts() },
+  created () { this.loadGoods() },
   methods: {
-    loadProducts () {
+    loadGoods () {
       this.errorMessage = ''
       if (this.registeredFrom && this.registeredTo && this.registeredTo < this.registeredFrom) {
         this.errorMessage = '등록 종료일시는 시작일시 이후로 선택해 주세요.'
         return
       }
       this.isLoading = true
-      getAdminProducts({
+      getAdminGoodsList({
         searchType: this.searchType,
         keyword: this.keyword || undefined,
         registeredFrom: this.registeredFrom || undefined,
         registeredTo: this.registeredTo || undefined,
         statuses: this.selectedStatuses.length ? this.selectedStatuses.join(',') : undefined,
-        brands: this.selectedBrands.length ? this.selectedBrands.join(',') : undefined,
-        categories: this.selectedCategories.length ? this.selectedCategories.join(',') : undefined,
+        brandNos: this.selectedBrandNos.length ? this.selectedBrandNos.join(',') : undefined,
+        categoryNos: this.selectedCategoryNos.length ? this.selectedCategoryNos.join(',') : undefined,
         page: this.currentPage,
         size: this.pageSize
       }).then(({ data }) => {
-        this.products = data.items
+        this.goods = data.items
         this.totalCount = data.totalCount
         this.brandOptions = data.brands
         this.categoryOptions = data.categories
       }).catch(() => { this.errorMessage = '상품 목록을 불러오지 못했습니다.' }).finally(() => { this.isLoading = false })
     },
-    searchProducts () {
+    searchGoods () {
       this.currentPage = 1
-      this.loadProducts()
+      this.loadGoods()
     },
     changePageSize () {
       this.currentPage = 1
-      this.loadProducts()
+      this.loadGoods()
     },
     changePage (pageNumber) {
       if (pageNumber < 1 || pageNumber > this.totalPages || pageNumber === this.currentPage) return
       this.currentPage = pageNumber
-      this.loadProducts()
+      this.loadGoods()
     },
     resetFilters () {
-      this.searchType = 'PRODUCT_NAME'
+      this.searchType = 'GOODS_NAME'
       this.keyword = ''
       this.registeredFrom = ''
       this.registeredTo = ''
       this.selectedStatuses = []
-      this.selectedBrands = []
-      this.selectedCategories = []
+      this.selectedBrandNos = []
+      this.selectedCategoryNos = []
       this.currentPage = 1
       this.pageSize = 20
-      this.loadProducts()
+      this.loadGoods()
     },
     currency (value) { return `${Number(value || 0).toLocaleString('ko-KR')}원` },
     imageUrl (path) { return `${envs.apiBaseUrl.replace(/\/api$/, '')}${path}` },

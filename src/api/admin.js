@@ -15,17 +15,17 @@ export function logoutAdmin () {
   })
 }
 
-export function getAdminProducts (params) {
-  return requestAdmin({ url: '/admin/products', method: 'GET', params })
+export function getAdminGoodsList (params) {
+  return requestAdmin({ url: '/admin/goods', method: 'GET', params })
 }
 
-export function getAdminProduct (productNo) {
-  return requestAdmin({ url: `/admin/products/${productNo}`, method: 'GET' })
+export function getAdminGoods (goodsNo) {
+  return requestAdmin({ url: `/admin/goods/${goodsNo}`, method: 'GET' })
 }
 
-export function createAdminProduct (formData) {
+export function createAdminGoods (formData) {
   return requestAdmin({
-    url: '/admin/products',
+    url: '/admin/goods',
     method: 'POST',
     data: formData
   })

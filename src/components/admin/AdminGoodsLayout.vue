@@ -4,7 +4,7 @@
       <router-link class="brand" :to="{ name: 'adminDashboard' }"><span>P</span> POLAR ADMIN</router-link>
       <nav aria-label="관리자 메뉴">
         <router-link :to="{ name: 'adminDashboard' }">대시보드</router-link>
-        <router-link class="active" :to="{ name: 'adminProductList' }">상품 관리</router-link>
+        <router-link class="active" :to="{ name: 'adminGoodsList' }">상품 관리</router-link>
         <a href="#">회원 관리</a>
         <a href="#">문의 관리</a>
       </nav>
@@ -12,7 +12,7 @@
     </aside>
     <main>
       <header>
-        <div><p>PRODUCT MANAGEMENT</p><h1>{{ title }}</h1></div>
+        <div><p>GOODS MANAGEMENT</p><h1>{{ title }}</h1></div>
         <button type="button" :disabled="isLoggingOut" @click="logout">로그아웃</button>
       </header>
       <slot />
@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'AdminProductLayout',
+  name: 'AdminGoodsLayout',
   props: { title: { type: String, required: true } },
   data: () => ({ isLoggingOut: false }),
   methods: {

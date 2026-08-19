@@ -74,7 +74,7 @@
         </div>
       </section>
 
-      <section id="best-items" class="product-section content-section">
+      <section id="best-items" class="goods-section content-section">
         <div class="section-heading">
           <div>
             <p class="section-kicker">CUSTOMER'S PICK</p>
@@ -83,25 +83,25 @@
           <span>판매중 · 품절 상품</span>
         </div>
 
-        <p v-if="isLoadingProducts" class="product-message">상품을 불러오는 중입니다.</p>
-        <p v-else-if="productError" class="product-message product-message--error" role="alert">{{ productError }}</p>
-        <div v-else-if="products.length" class="product-grid" aria-label="판매 상품">
-          <article v-for="product in products" :key="product.productNo" class="product-card">
-            <div class="product-image">
-              <img v-if="product.representativeImageUrl" :src="imageUrl(product.representativeImageUrl)" :alt="product.productNameKo">
+        <p v-if="isLoadingGoods" class="goods-message">상품을 불러오는 중입니다.</p>
+        <p v-else-if="goodsError" class="goods-message goods-message--error" role="alert">{{ goodsError }}</p>
+        <div v-else-if="goods.length" class="goods-grid" aria-label="판매 상품">
+          <article v-for="goods in goods" :key="goods.goodsNo" class="goods-card">
+            <div class="goods-image">
+              <img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo">
               <span v-else>POLAR<br>BEAR</span>
             </div>
-            <p class="product-category">{{ product.brandName || 'POLAR BEAR' }} · {{ product.categoryName }}</p>
-            <h3>{{ product.productNameKo }}</h3>
-            <p v-if="product.productNameEn" class="product-name-en">{{ product.productNameEn }}</p>
-            <div class="product-price">
-              <strong>{{ currency(product.discountPrice == null ? product.salePrice : product.discountPrice) }}</strong>
-              <del v-if="hasDiscount(product)">{{ currency(product.salePrice) }}</del>
+            <p class="goods-category">{{ goods.brandNameKo || 'POLAR BEAR' }} · {{ goods.categoryName }}</p>
+            <h3>{{ goods.goodsNameKo }}</h3>
+            <p v-if="goods.goodsNameEn" class="goods-name-en">{{ goods.goodsNameEn }}</p>
+            <div class="goods-price">
+              <strong>{{ currency(goods.discountPrice == null ? goods.salePrice : goods.discountPrice) }}</strong>
+              <del v-if="hasDiscount(goods)">{{ currency(goods.salePrice) }}</del>
             </div>
-            <p class="product-status" :class="{ 'product-status--sold-out': product.productStatus === 'SOLD_OUT' }">{{ product.productStatus === 'SOLD_OUT' ? '품절' : '판매중' }}</p>
+            <p class="goods-status" :class="{ 'goods-status--sold-out': goods.goodsStatus === 'SOLD_OUT' }">{{ goods.goodsStatus === 'SOLD_OUT' ? '품절' : '판매중' }}</p>
           </article>
         </div>
-        <p v-else class="product-message">현재 판매중인 상품이 없습니다.</p>
+        <p v-else class="goods-message">현재 판매중인 상품이 없습니다.</p>
       </section>
 
       <section class="support-banner">
@@ -129,16 +129,16 @@
 </template>
 
 <script>
-import { getFeaturedProducts } from '@/api/product'
+import { getFeaturedGoods } from '@/api/goods'
 import envs from '@/envs'
 
 export default {
   name: 'MainView',
   data () {
     return {
-      products: [],
-      isLoadingProducts: false,
-      productError: '',
+      goods: [],
+      isLoadingGoods: false,
+      goodsError: '',
       isAuthenticated: Boolean(localStorage.getItem('accessToken')),
       isLoggingOut: false,
       logoutError: ''
@@ -154,21 +154,21 @@ export default {
     }
   },
   created () {
-    this.loadProducts()
+    this.loadGoods()
   },
   methods: {
-    loadProducts () {
-      this.isLoadingProducts = true
-      this.productError = ''
-      getFeaturedProducts()
+    loadGoods () {
+      this.isLoadingGoods = true
+      this.goodsError = ''
+      getFeaturedGoods()
         .then(({ data }) => {
-          this.products = data
+          this.goods = data
         })
         .catch(() => {
-          this.productError = '상품을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
+          this.goodsError = '상품을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'
         })
         .finally(() => {
-          this.isLoadingProducts = false
+          this.isLoadingGoods = false
         })
     },
     imageUrl (path) {
@@ -177,8 +177,8 @@ export default {
     currency (value) {
       return `${Number(value || 0).toLocaleString('ko-KR')}원`
     },
-    hasDiscount (product) {
-      return product.discountPrice != null && Number(product.discountPrice) < Number(product.salePrice)
+    hasDiscount (goods) {
+      return goods.discountPrice != null && Number(goods.discountPrice) < Number(goods.salePrice)
     },
     editUserInfo () {
       this.$router.push({ name: 'userPasswordConfirm' })
@@ -512,17 +512,17 @@ export default {
   font-size: 12px;
 }
 
-.product-grid {
+.goods-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
-.product-card {
+.goods-card {
   min-width: 0;
 }
 
-.product-image {
+.goods-image {
   aspect-ratio: 4 / 5;
   display: grid;
   place-items: center;
@@ -535,13 +535,13 @@ export default {
   overflow: hidden;
 }
 
-.product-image img {
+.goods-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.product-category {
+.goods-category {
   margin: 16px 0 6px;
   color: #7b9290;
   font-size: 9px;
@@ -549,13 +549,13 @@ export default {
   letter-spacing: 0.16em;
 }
 
-.product-card h3 {
+.goods-card h3 {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
 }
 
-.product-name-en {
+.goods-name-en {
   min-height: 28px;
   margin: 5px 0 0;
   color: #879694;
@@ -563,40 +563,40 @@ export default {
   line-height: 1.4;
 }
 
-.product-price {
+.goods-price {
   margin-top: 12px;
   display: flex;
   align-items: baseline;
   gap: 7px;
 }
 
-.product-price strong {
+.goods-price strong {
   font-size: 14px;
 }
 
-.product-price del {
+.goods-price del {
   color: #9ba8a7;
   font-size: 10px;
 }
 
-.product-status {
+.goods-status {
   margin: 10px 0 0;
   color: #97a4a5;
   font-size: 10px;
   letter-spacing: 0.12em;
 }
 
-.product-status--sold-out {
+.goods-status--sold-out {
   color: #a35252;
 }
 
-.product-message {
+.goods-message {
   padding: 48px 0;
   color: #7d8f8d;
   text-align: center;
 }
 
-.product-message--error {
+.goods-message--error {
   color: #b14949;
 }
 
@@ -702,7 +702,7 @@ export default {
     min-height: 160px;
   }
 
-  .product-grid {
+  .goods-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 
@@ -765,7 +765,7 @@ export default {
     font-size: 27px;
   }
 
-  .product-grid {
+  .goods-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px 12px;
   }

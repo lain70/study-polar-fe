@@ -4,7 +4,7 @@
       <div class="brand"><span>P</span> POLAR ADMIN</div>
       <nav aria-label="관리자 메뉴">
         <a class="active" href="#overview">대시보드</a>
-        <router-link :to="{ name: 'adminProductList' }">상품 관리</router-link>
+        <router-link :to="{ name: 'adminGoodsList' }">상품 관리</router-link>
         <a href="#members">회원 관리</a>
         <a href="#inquiries">문의 관리</a>
         <a href="#operations">운영 설정</a>
