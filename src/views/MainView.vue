@@ -87,18 +87,20 @@
         <p v-else-if="goodsError" class="goods-message goods-message--error" role="alert">{{ goodsError }}</p>
         <div v-else-if="goods.length" class="goods-grid" aria-label="판매 상품">
           <article v-for="goods in goods" :key="goods.goodsNo" class="goods-card">
-            <div class="goods-image">
-              <img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo">
-              <span v-else>POLAR<br>BEAR</span>
-            </div>
-            <p class="goods-category">{{ goods.brandNameKo || 'POLAR BEAR' }} · {{ goods.categoryName }}</p>
-            <h3>{{ goods.goodsNameKo }}</h3>
-            <p v-if="goods.goodsNameEn" class="goods-name-en">{{ goods.goodsNameEn }}</p>
-            <div class="goods-price">
-              <strong>{{ currency(goods.discountPrice == null ? goods.salePrice : goods.discountPrice) }}</strong>
-              <del v-if="hasDiscount(goods)">{{ currency(goods.salePrice) }}</del>
-            </div>
-            <p class="goods-status" :class="{ 'goods-status--sold-out': goods.goodsStatus === 'SOLD_OUT' }">{{ goods.goodsStatus === 'SOLD_OUT' ? '품절' : '판매중' }}</p>
+            <router-link class="goods-card-link" :to="{ name: 'goodsDetail', params: { goodsNo: goods.goodsNo } }">
+              <div class="goods-image">
+                <img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo">
+                <span v-else>POLAR<br>BEAR</span>
+              </div>
+              <p class="goods-category">{{ goods.brandNameKo || 'POLAR BEAR' }} · {{ goods.categoryName }}</p>
+              <h3>{{ goods.goodsNameKo }}</h3>
+              <p v-if="goods.goodsNameEn" class="goods-name-en">{{ goods.goodsNameEn }}</p>
+              <div class="goods-price">
+                <strong>{{ currency(goods.discountPrice == null ? goods.salePrice : goods.discountPrice) }}</strong>
+                <del v-if="hasDiscount(goods)">{{ currency(goods.salePrice) }}</del>
+              </div>
+              <p class="goods-status" :class="{ 'goods-status--sold-out': goods.goodsStatus === 'SOLD_OUT' }">{{ goods.goodsStatus === 'SOLD_OUT' ? '품절' : '판매중' }}</p>
+            </router-link>
           </article>
         </div>
         <p v-else class="goods-message">현재 판매중인 상품이 없습니다.</p>
@@ -522,6 +524,17 @@ export default {
   min-width: 0;
 }
 
+.goods-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.goods-card-link:focus-visible {
+  outline: 2px solid #4d827b;
+  outline-offset: 5px;
+}
+
 .goods-image {
   aspect-ratio: 4 / 5;
   display: grid;
@@ -539,6 +552,11 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.goods-card-link:hover .goods-image img {
+  transform: scale(1.025);
 }
 
 .goods-category {
