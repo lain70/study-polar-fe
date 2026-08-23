@@ -82,7 +82,7 @@
             <div><dt>답변일</dt><dd>{{ qnaData.replyUpdtDate || '-' }}</dd></div>
           </dl>
           <div class="answer-content">
-            {{ qnaData.qreplyContents || '문의 내용을 확인하고 있습니다. 답변이 등록되면 이곳에서 확인할 수 있습니다.' }}
+            {{ qnaData.qnaReplyContents || '문의 내용을 확인하고 있습니다. 답변이 등록되면 이곳에서 확인할 수 있습니다.' }}
           </div>
         </section>
 
