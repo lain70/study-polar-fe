@@ -13,3 +13,7 @@ const goodsApi = axios.create({
 export function getFeaturedGoods () {
   return goodsApi.get('/goods/featured')
 }
+
+export function getGoodsDetail (goodsNo) {
+  return goodsApi.get(`/goods/${goodsNo}`)
+}

@@ -25,6 +25,12 @@ const routes = [{
     import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
 },
 {
+  path: '/goods/:goodsNo',
+  name: 'goodsDetail',
+  component: () =>
+    import('@/views/goods/GoodsDetailView.vue')
+},
+{
   path: '/customer/qnalist',
   name: 'qnaList',
   component: () =>
@@ -91,7 +97,16 @@ const routes = [{
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    }
+    if (to.hash) {
+      return { selector: to.hash }
+    }
+    return { x: 0, y: 0 }
+  }
 })
 
 router.beforeEach((to, from, next) => {
