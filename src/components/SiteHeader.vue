@@ -6,8 +6,7 @@
         <span>POLAR BEAR SHOP</span>
       </router-link>
       <form class="search-form" role="search" @submit.prevent>
-        <label class="sr-only" for="site-search">상품 검색</label>
-        <input id="site-search" type="search">
+        <input id="site-search" type="search" placeholder="찾고 있는 상품을 검색해 보세요">
         <button type="submit" aria-label="검색">검색</button>
       </form>
       <div class="account-actions">
