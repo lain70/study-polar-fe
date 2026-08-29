@@ -7,7 +7,7 @@
       </router-link>
       <form class="search-form" role="search" @submit.prevent>
         <label class="sr-only" for="site-search">상품 검색</label>
-        <input id="site-search" type="search" placeholder="찾고 있는 상품을 검색해 보세요">
+        <input id="site-search" type="search">
         <button type="submit" aria-label="검색">검색</button>
       </form>
       <div class="account-actions">
@@ -74,7 +74,7 @@ export default {
 .account-button span { width: 26px; height: 26px; display: grid; place-items: center; border: 1px solid #b9c8c6; border-radius: 50%; font-size: 11px; }
 .auth-button { padding-left: 14px; border-left: 1px solid #d9e2e0; color: #667b80; } .auth-button:disabled { cursor: wait; opacity: .6; }
 .logout-error { position: absolute; top: 30px; right: 0; width: 250px; margin: 0; color: #b14949; font-size: 10px; text-align: right; }
-.main-nav { min-height: 54px; display: flex; align-items: center; justify-content: center; gap: clamp(34px, 6vw, 76px); border-top: 1px solid #edf1f0; }
+.main-nav { min-height: 54px; display: flex; align-items: center; justify-content: center; gap: clamp(34px, 6vw, 76px); }
 .main-nav a { color: #40585d; font-size: 13px; font-weight: 700; text-decoration: none; } .main-nav a:hover,.main-nav .router-link-exact-active { color: #4d827b; }
 @media(max-width:800px){.utility-bar{grid-template-columns:1fr;gap:20px;padding:24px 20px}.account-actions{justify-self:start}.main-nav{gap:18px;flex-wrap:wrap;padding:14px 20px}}
 </style>
