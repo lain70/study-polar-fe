@@ -29,6 +29,7 @@
         <router-link :to="{ name: 'main' }">홈</router-link>
         <a href="#new-arrivals">신상품</a>
         <a href="#best-items">베스트</a>
+        <router-link :to="{ name: 'eventList' }">이벤트</router-link>
         <router-link to="/csr">문의하기</router-link>
       </nav>
     </header>
