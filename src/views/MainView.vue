@@ -9,7 +9,7 @@
           <p class="eyebrow">WELCOME · POLAR BEAR SHOP</p>
           <h1>polar bear shop에<br>오신걸 환영합니다.</h1>
           <p>
-            일상에 따뜻함을 더하는 새로운 상품과 이야기를 만나보세요.
+            캠핑, 트레킹, 낚시를 위한 믿음직한 아웃도어 장비를 만나보세요.
           </p>
           <a class="hero-link" href="#best-items">추천 상품 보기</a>
         </div>
@@ -25,20 +25,35 @@
         </div>
 
         <div class="category-grid">
-          <a href="#best-items" class="category-card category-card--daily">
+          <a href="#best-items" class="category-card category-card--camping">
             <span>01</span>
-            <strong>DAILY</strong>
-            <p>매일 곁에 두고 싶은 편안한 아이템</p>
+            <strong>CAMPING</strong>
+            <p>텐트부터 취사와 수납까지 캠핑의 모든 순간</p>
           </a>
-          <a href="#best-items" class="category-card category-card--living">
+          <a href="#best-items" class="category-card category-card--trekking">
             <span>02</span>
-            <strong>LIVING</strong>
-            <p>공간에 온기를 더하는 생활용품</p>
+            <strong>TREKKING</strong>
+            <p>가방, 등산화와 안전 장비로 완성하는 산행</p>
           </a>
-          <a href="#best-items" class="category-card category-card--gift">
+          <a href="#best-items" class="category-card category-card--fishing">
             <span>03</span>
-            <strong>GIFT</strong>
-            <p>소중한 마음을 담은 특별한 선물</p>
+            <strong>FISHING</strong>
+            <p>민물과 바다를 아우르는 낚시 장비와 소품</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--water">
+            <span>04</span>
+            <strong>WATER</strong>
+            <p>카약, SUP와 해양 활동을 위한 안전한 선택</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--travel">
+            <span>05</span>
+            <strong>TRAVEL</strong>
+            <p>피크닉과 여행을 더 가볍고 여유롭게</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--wear">
+            <span>06</span>
+            <strong>OUTDOOR WEAR</strong>
+            <p>날씨 변화에 대비하는 의류, 신발과 방한용품</p>
           </a>
         </div>
       </section>
@@ -259,16 +274,28 @@ export default {
   transform: translateY(-3px);
 }
 
-.category-card--daily {
+.category-card--camping {
   background: #dceae7;
 }
 
-.category-card--living {
+.category-card--trekking {
   background: #ece6d9;
 }
 
-.category-card--gift {
+.category-card--fishing {
   background: #d9e0e3;
+}
+
+.category-card--water {
+  background: #dbe8ed;
+}
+
+.category-card--travel {
+  background: #e7e2d8;
+}
+
+.category-card--wear {
+  background: #dfe5dc;
 }
 
 .category-card span {
