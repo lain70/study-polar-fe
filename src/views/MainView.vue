@@ -1,37 +1,6 @@
 <template>
   <div class="shop-page">
-    <header class="site-header">
-      <div class="utility-bar">
-        <router-link class="brand" :to="{ name: 'main' }" aria-label="Polar Bear Shop 홈">
-          <span class="brand-mark" aria-hidden="true">P</span>
-          <span>POLAR BEAR SHOP</span>
-        </router-link>
-
-        <form class="search-form" role="search" @submit.prevent>
-          <label class="sr-only" for="site-search">상품 검색</label>
-          <input id="site-search" type="search" placeholder="찾고 있는 상품을 검색해 보세요">
-          <button type="submit" aria-label="검색">검색</button>
-        </form>
-
-        <div class="account-actions">
-          <button v-if="isAuthenticated" class="account-button" type="button" @click="editUserInfo">
-            <span aria-hidden="true">○</span>
-            회원정보 수정
-          </button>
-          <button class="auth-button" type="button" :disabled="isLoggingOut" @click="handleAuthAction">
-            {{ authButtonText }}
-          </button>
-          <p v-if="logoutError" class="logout-error" role="alert">{{ logoutError }}</p>
-        </div>
-      </div>
-
-      <nav class="main-nav" aria-label="주요 메뉴">
-        <router-link :to="{ name: 'main' }">홈</router-link>
-        <a href="#new-arrivals">신상품</a>
-        <a href="#best-items">베스트</a>
-        <router-link to="/csr">문의하기</router-link>
-      </nav>
-    </header>
+    <site-header />
 
     <main>
       <section class="hero-section">
@@ -40,7 +9,7 @@
           <p class="eyebrow">WELCOME · POLAR BEAR SHOP</p>
           <h1>polar bear shop에<br>오신걸 환영합니다.</h1>
           <p>
-            일상에 따뜻함을 더하는 새로운 상품과 이야기를 만나보세요.
+            캠핑, 트레킹, 낚시를 위한 믿음직한 아웃도어 장비를 만나보세요.
           </p>
           <a class="hero-link" href="#best-items">추천 상품 보기</a>
         </div>
@@ -56,20 +25,35 @@
         </div>
 
         <div class="category-grid">
-          <a href="#best-items" class="category-card category-card--daily">
+          <a href="#best-items" class="category-card category-card--camping">
             <span>01</span>
-            <strong>DAILY</strong>
-            <p>매일 곁에 두고 싶은 편안한 아이템</p>
+            <strong>CAMPING</strong>
+            <p>텐트부터 취사와 수납까지 캠핑의 모든 순간</p>
           </a>
-          <a href="#best-items" class="category-card category-card--living">
+          <a href="#best-items" class="category-card category-card--trekking">
             <span>02</span>
-            <strong>LIVING</strong>
-            <p>공간에 온기를 더하는 생활용품</p>
+            <strong>TREKKING</strong>
+            <p>가방, 등산화와 안전 장비로 완성하는 산행</p>
           </a>
-          <a href="#best-items" class="category-card category-card--gift">
+          <a href="#best-items" class="category-card category-card--fishing">
             <span>03</span>
-            <strong>GIFT</strong>
-            <p>소중한 마음을 담은 특별한 선물</p>
+            <strong>FISHING</strong>
+            <p>민물과 바다를 아우르는 낚시 장비와 소품</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--water">
+            <span>04</span>
+            <strong>WATER</strong>
+            <p>카약, SUP와 해양 활동을 위한 안전한 선택</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--travel">
+            <span>05</span>
+            <strong>TRAVEL</strong>
+            <p>피크닉과 여행을 더 가볍고 여유롭게</p>
+          </a>
+          <a href="#best-items" class="category-card category-card--wear">
+            <span>06</span>
+            <strong>OUTDOOR WEAR</strong>
+            <p>날씨 변화에 대비하는 의류, 신발과 방한용품</p>
           </a>
         </div>
       </section>
@@ -116,43 +100,24 @@
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-brand">
-        <span class="brand-mark" aria-hidden="true">P</span>
-        <div>
-          <strong>POLAR BEAR SHOP</strong>
-          <p>A WARM SHOP IN THE POLAR</p>
-        </div>
-      </div>
-      <p>일상에 따뜻함을 더하는 작은 쇼핑 공간입니다.</p>
-      <p class="copyright">© POLAR BEAR SHOP. ALL RIGHTS RESERVED.</p>
-    </footer>
+    <site-footer />
   </div>
 </template>
 
 <script>
 import { getFeaturedGoods } from '@/api/goods'
 import envs from '@/envs'
+import SiteHeader from '@/components/SiteHeader.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
 
 export default {
   name: 'MainView',
+  components: { SiteHeader, SiteFooter },
   data () {
     return {
       goods: [],
       isLoadingGoods: false,
-      goodsError: '',
-      isAuthenticated: Boolean(localStorage.getItem('accessToken')),
-      isLoggingOut: false,
-      logoutError: ''
-    }
-  },
-  computed: {
-    authButtonText () {
-      if (!this.isAuthenticated) {
-        return '로그인'
-      }
-
-      return this.isLoggingOut ? '로그아웃 중' : '로그아웃'
+      goodsError: ''
     }
   },
   created () {
@@ -181,32 +146,6 @@ export default {
     },
     hasDiscount (goods) {
       return goods.discountPrice != null && Number(goods.discountPrice) < Number(goods.salePrice)
-    },
-    editUserInfo () {
-      this.$router.push({ name: 'userPasswordConfirm' })
-    },
-    handleAuthAction () {
-      if (!this.isAuthenticated) {
-        this.$router.push({ name: 'userLogin' })
-        return
-      }
-
-      this.logout()
-    },
-    logout () {
-      this.logoutError = ''
-      this.isLoggingOut = true
-
-      this.$store.dispatch('UserLogoutProc')
-        .then(() => {
-          this.isAuthenticated = false
-        })
-        .catch(() => {
-          this.logoutError = '로그아웃에 실패했습니다. 잠시 후 다시 시도해 주세요.'
-        })
-        .finally(() => {
-          this.isLoggingOut = false
-        })
     }
   }
 }
@@ -221,154 +160,6 @@ export default {
   background: #f8faf9;
   color: var(--ink);
   text-align: left;
-}
-
-.site-header {
-  position: relative;
-  z-index: 10;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.96);
-}
-
-.utility-bar {
-  max-width: 1240px;
-  min-height: 92px;
-  margin: 0 auto;
-  padding: 0 32px;
-  display: grid;
-  grid-template-columns: 250px minmax(280px, 560px) 250px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.16em;
-  text-decoration: none;
-}
-
-.brand-mark {
-  width: 36px;
-  height: 36px;
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  border: 1px solid #9ab2ae;
-  border-radius: 50%;
-  font-family: Georgia, serif;
-  font-size: 19px;
-  letter-spacing: 0;
-}
-
-.search-form {
-  height: 46px;
-  display: flex;
-  border: 1px solid #cbd8d6;
-  border-radius: 24px;
-  background: #f7faf9;
-  overflow: hidden;
-}
-
-.search-form input {
-  min-width: 0;
-  flex: 1;
-  padding: 0 20px;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--ink);
-  font-size: 13px;
-}
-
-.search-form input::placeholder {
-  color: #97a6a6;
-}
-
-.search-form button {
-  padding: 0 20px;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.account-actions {
-  position: relative;
-  justify-self: end;
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.account-button,
-.auth-button {
-  border: 0;
-  background: transparent;
-  color: var(--ink);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.account-button span {
-  width: 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  border: 1px solid #b9c8c6;
-  border-radius: 50%;
-  font-size: 11px;
-}
-
-.auth-button {
-  padding-left: 14px;
-  border-left: 1px solid #d9e2e0;
-  color: #667b80;
-}
-
-.auth-button:disabled {
-  cursor: wait;
-  opacity: 0.6;
-}
-
-.logout-error {
-  position: absolute;
-  top: 30px;
-  right: 0;
-  width: 250px;
-  margin: 0;
-  color: #b14949;
-  font-size: 10px;
-  text-align: right;
-}
-
-.main-nav {
-  min-height: 54px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(34px, 6vw, 76px);
-  border-top: 1px solid #edf1f0;
-}
-
-.main-nav a {
-  color: #40585d;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.main-nav a:hover,
-.main-nav .router-link-exact-active {
-  color: #4d827b;
 }
 
 .hero-section {
@@ -483,16 +274,28 @@ export default {
   transform: translateY(-3px);
 }
 
-.category-card--daily {
+.category-card--camping {
   background: #dceae7;
 }
 
-.category-card--living {
+.category-card--trekking {
   background: #ece6d9;
 }
 
-.category-card--gift {
+.category-card--fishing {
   background: #d9e0e3;
+}
+
+.category-card--water {
+  background: #dbe8ed;
+}
+
+.category-card--travel {
+  background: #e7e2d8;
+}
+
+.category-card--wear {
+  background: #dfe5dc;
 }
 
 .category-card span {
@@ -646,44 +449,6 @@ export default {
   white-space: nowrap;
 }
 
-.site-footer {
-  min-height: 170px;
-  padding: 38px max(32px, calc((100% - 1240px) / 2));
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-content: center;
-  align-items: center;
-  gap: 12px 40px;
-  border-top: 1px solid var(--line);
-  background: #eef3f1;
-  color: #687b7e;
-  font-size: 11px;
-}
-
-.footer-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--ink);
-}
-
-.footer-brand strong {
-  font-size: 11px;
-  letter-spacing: 0.16em;
-}
-
-.footer-brand p {
-  margin: 5px 0 0;
-  color: #8b9b9d;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-}
-
-.copyright {
-  grid-column: 2;
-  margin: 0;
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -697,17 +462,6 @@ export default {
 }
 
 @media (max-width: 900px) {
-  .utility-bar {
-    padding: 20px 24px;
-    grid-template-columns: 1fr auto;
-  }
-
-  .search-form {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    width: 100%;
-  }
-
   .hero-section {
     min-height: 500px;
   }
@@ -730,33 +484,6 @@ export default {
 }
 
 @media (max-width: 560px) {
-  .utility-bar {
-    padding: 18px;
-    gap: 18px;
-  }
-
-  .brand {
-    font-size: 10px;
-  }
-
-  .account-button {
-    font-size: 0;
-  }
-
-  .account-button span {
-    font-size: 11px;
-  }
-
-  .main-nav {
-    padding: 0 14px;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .main-nav a {
-    font-size: 12px;
-  }
-
   .hero-section {
     min-height: 430px;
   }
@@ -795,11 +522,5 @@ export default {
     flex-direction: column;
   }
 
-  .site-footer {
-    padding: 34px 20px;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
 </style>

@@ -31,6 +31,12 @@ const routes = [{
     import('@/views/goods/GoodsDetailView.vue')
 },
 {
+  path: '/events',
+  name: 'eventList',
+  component: () =>
+    import('@/views/events/EventListView.vue')
+},
+{
   path: '/customer/qnalist',
   name: 'qnaList',
   component: () =>
