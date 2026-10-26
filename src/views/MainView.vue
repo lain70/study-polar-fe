@@ -1,13 +1,14 @@
 <template>
   <div class="shop-page">
+    <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
     <site-header />
 
-    <main>
+    <main id="main-content" tabindex="-1">
       <section class="hero-section">
         <div class="hero-shade"></div>
         <div class="hero-content">
           <p class="eyebrow">WELCOME · POLAR BEAR SHOP</p>
-          <h1>polar bear shop에<br>오신걸 환영합니다.</h1>
+          <h1>일상을 벗어나,<br>자연에 더 가까이.</h1>
           <p>
             캠핑, 트레킹, 낚시를 위한 믿음직한 아웃도어 장비를 만나보세요.
           </p>
@@ -67,13 +68,13 @@
           <span>판매중 · 품절 상품</span>
         </div>
 
-        <p v-if="isLoadingGoods" class="goods-message">상품을 불러오는 중입니다.</p>
+        <p v-if="isLoadingGoods" class="goods-message" role="status">상품을 불러오는 중입니다.</p>
         <p v-else-if="goodsError" class="goods-message goods-message--error" role="alert">{{ goodsError }}</p>
         <div v-else-if="goods.length" class="goods-grid" aria-label="판매 상품">
           <article v-for="goods in goods" :key="goods.goodsNo" class="goods-card">
             <router-link class="goods-card-link" :to="{ name: 'goodsDetail', params: { goodsNo: goods.goodsNo } }">
               <div class="goods-image">
-                <img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo">
+                <img v-if="goods.representativeImageUrl" :src="imageUrl(goods.representativeImageUrl)" :alt="goods.goodsNameKo" loading="lazy" decoding="async">
                 <span v-else>POLAR<br>BEAR</span>
               </div>
               <p class="goods-category">{{ goods.brandNameKo || 'POLAR BEAR' }} · {{ goods.categoryName }}</p>
@@ -153,18 +154,18 @@ export default {
 
 <style lang="scss" scoped>
 .shop-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #6f8083;
-  --line: #dce5e3;
+  --line: var(--color-border);
   min-height: 100vh;
-  background: #f8faf9;
+  background: var(--color-background);
   color: var(--ink);
   text-align: left;
 }
 
 .hero-section {
   position: relative;
-  min-height: 560px;
+  min-height: 580px;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -188,8 +189,8 @@ export default {
 .eyebrow,
 .section-kicker {
   margin: 0 0 15px;
-  color: #82aaa4;
-  font-size: 10px;
+  color: var(--color-primary);
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.2em;
 }
@@ -210,7 +211,7 @@ export default {
 .hero-content > p:not(.eyebrow) {
   margin: 24px 0 30px;
   color: rgba(255, 255, 255, 0.78);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .hero-link {
@@ -220,7 +221,7 @@ export default {
   align-items: center;
   border: 1px solid rgba(255, 255, 255, 0.68);
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-decoration: none;
 }
@@ -249,8 +250,8 @@ export default {
 }
 
 .section-heading > span {
-  color: #879597;
-  font-size: 11px;
+  color: var(--color-muted-foreground);
+  font-size: 14px;
 }
 
 .category-grid {
@@ -267,11 +268,11 @@ export default {
   justify-content: flex-end;
   color: var(--ink);
   text-decoration: none;
-  transition: transform 0.2s;
+  transition: box-shadow 0.2s;
 }
 
 .category-card:hover {
-  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 2px var(--color-primary);
 }
 
 .category-card--camping {
@@ -301,7 +302,7 @@ export default {
 .category-card span {
   margin-bottom: auto;
   color: rgba(24, 52, 58, 0.5);
-  font-size: 10px;
+  font-size: 14px;
 }
 
 .category-card strong {
@@ -314,12 +315,12 @@ export default {
 .category-card p {
   margin: 9px 0 0;
   color: #64777a;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .goods-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -364,23 +365,23 @@ export default {
 
 .goods-category {
   margin: 16px 0 6px;
-  color: #7b9290;
-  font-size: 9px;
+  color: var(--color-muted-foreground);
+  font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.16em;
 }
 
 .goods-card h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
 }
 
 .goods-name-en {
   min-height: 28px;
   margin: 5px 0 0;
-  color: #879694;
-  font-size: 10px;
+  color: var(--color-muted-foreground);
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -392,18 +393,18 @@ export default {
 }
 
 .goods-price strong {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .goods-price del {
-  color: #9ba8a7;
-  font-size: 10px;
+  color: var(--color-muted-foreground);
+  font-size: 14px;
 }
 
 .goods-status {
   margin: 10px 0 0;
-  color: #97a4a5;
-  font-size: 10px;
+  color: var(--color-muted-foreground);
+  font-size: 14px;
   letter-spacing: 0.12em;
 }
 
@@ -418,7 +419,7 @@ export default {
 }
 
 .goods-message--error {
-  color: #b14949;
+  color: var(--color-destructive);
 }
 
 .support-banner {
@@ -443,7 +444,7 @@ export default {
   padding: 14px 28px;
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
@@ -523,4 +524,14 @@ export default {
   }
 
 }
+
+.hero-link { background: var(--color-card); color: var(--color-foreground); border-radius: 6px; font-size: 14px; }
+.hero-link:hover { background: #e4eee8; }
+.category-card, .goods-image, .support-banner { border-radius: var(--radius-card); }
+.goods-card h3 { line-height: 1.55; }
+.goods-price { flex-wrap: wrap; }
+.goods-status { display: inline-flex; padding: 4px 8px; border-radius: 4px; background: #e5ede7; color: #214e46; font-size: 12px; letter-spacing: 0; }
+.goods-status--sold-out { background: #f8e9e5; color: #963a30; }
+.goods-image > span { color: #526764; }
+section[id] { scroll-margin-top: 24px; }
 </style>

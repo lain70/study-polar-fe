@@ -2,11 +2,11 @@
 
 ## 1. 기본 원칙
 
-- Vue 2 및 현재 설치된 Vue CLI 5 생태계와 호환되는 문법을 사용합니다.
+- Vue 3 및 현재 설치된 Vue CLI 5 생태계와 호환되는 문법을 사용합니다.
 - `.editorconfig`에 따라 JavaScript와 Vue 파일은 공백 2칸으로 들여씁니다.
 - 줄 끝 공백을 제거하고 모든 파일 끝에는 개행을 유지합니다.
 - 수정 범위를 작게 유지하고 관련 없는 파일을 포맷하지 않습니다.
-- 새 코드는 `plugin:vue/essential`과 `@vue/standard` ESLint 규칙을 따릅니다.
+- 새 코드는 `plugin:vue/vue3-essential`과 `@vue/standard` ESLint 규칙을 따릅니다.
 - 비즈니스 규칙이나 화면 동작이 불명확하면 추측해서 구현하지 않고 확인합니다.
 
 ## 2. 디렉터리 역할

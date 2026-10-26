@@ -1,5 +1,4 @@
 import axios from 'axios'
-import router from '@/router'
 import envs from '@/envs'
 
 const service = axios.create({
@@ -24,8 +23,8 @@ service.interceptors.request.use(
   },
   error => {
     // 에러가 날경우 진행 부분
-    console.log(error) // for debug
-    Promise.reject(error)
+    console.log('요청 설정을 처리하지 못했습니다.') // for debug
+    return Promise.reject(error)
   }
 )
 
@@ -35,8 +34,7 @@ service.interceptors.response.use(
     return response
   },
   error => {
-    return error.response
-    const originalRequest = error.config
+    return Promise.reject(error)
   }
 )
 export default service

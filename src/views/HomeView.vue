@@ -65,7 +65,7 @@
 
         <p class="security-note">
           <span aria-hidden="true">●</span>
-          Spring Security로 인증 정보를 확인합니다.
+          개인정보를 안전하게 보호합니다.
         </p>
       </div>
     </section>
@@ -133,7 +133,7 @@ export default {
 
 <style lang="scss" scoped>
 .home-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #667b80;
   --ice: #eaf3f2;
   min-height: 100vh;
@@ -199,7 +199,7 @@ export default {
 .login-kicker {
   margin: 0 0 18px;
   color: #c8ddda;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.22em;
 }
@@ -223,7 +223,7 @@ export default {
 .photo-caption {
   margin: 0;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.18em;
 }
 
@@ -287,7 +287,7 @@ export default {
 .password-label span {
   margin-bottom: 9px;
   color: #8b9b9e;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .login-form input {
@@ -340,7 +340,7 @@ export default {
 
 .error-message {
   margin: 14px 0 -8px;
-  color: #b14949;
+  color: var(--color-destructive);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -363,7 +363,7 @@ export default {
 .security-note {
   margin: 24px 0 0;
   color: #819194;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
 }
 
