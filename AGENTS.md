@@ -4,7 +4,7 @@
 
 ## 핵심 규칙
 
-- Vue 2와 현재 Vue CLI 5 구성을 유지합니다.
+- Vue 3와 현재 Vue CLI 5 구성을 유지합니다.
 - `.editorconfig`의 2칸 들여쓰기, 줄 끝 공백 제거와 파일 끝 개행 규칙을 따릅니다.
 - Vue 컴포넌트는 `PascalCase.vue`, JavaScript 식별자는 `camelCase`를 사용합니다.
 - API 호출은 `src/api`, 라우팅은 `src/router`, 공통 상태는 `src/store`의 기존 구조를 따릅니다.

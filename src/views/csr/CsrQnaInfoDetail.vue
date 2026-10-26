@@ -1,198 +1,199 @@
 <template>
   <div>
-	<div>
+    <div>
       <h2 class="title">폴라베어샵 1:1문의 답변하기</h2>
     </div>
-	<div class="polarfrm">
+    <div class="polarfrm">
       <div class="polarwrap">
         <table class="polartbl center">
           <colgroup>
-		        <col style="width:80px">
-		        <col style="width:80px">
-		        <col style="width:80px">
-				<col style="width:80px">
-		        <col style="width:80px">
-		        <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:80px">
+            <col style="width:80px">
           </colgroup>
           <tbody>
-			<tr class="tbl detail" style="height: 50px">
+            <tr class="tbl detail" style="height: 50px">
               <td>
                 <div>
                   <label>
-		        	<p>
-		        		문의 번호
-	        		</p>
+                    <p>
+                      문의 번호
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		{{qnaData.qnaNo}}
-	        		</p>
+                    <p>
+                      {{qnaData.qnaNo}}
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		작성자 ID
-	        		</p>
+                    <p>
+                      작성자 ID
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
-				  <div>
-                  <label>
-		        	<p>
-		        		{{qnaData.qnaUserId}}
-	        		</p>
-                  </label>
-                </div>
-              </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		작성일시
-	        		</p>
+                    <p>
+                      {{qnaData.qnaUserId}}
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		{{qnaData.regDate}}
-	        		</p>
+                    <p>
+                      작성일시
+                    </p>
+                  </label>
+                </div>
+              </td>
+              <td>
+                <div>
+                  <label>
+                    <p>
+                      {{qnaData.regDate}}
+                    </p>
                   </label>
                 </div>
               </td>
             </tr>
-			<tr class="tbl detail">
+            <tr class="tbl detail">
               <td>
                 <div>
                   <label>
-		        	<p>
-		        		문의제목
-	        		</p>
+                    <p>
+                      문의제목
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td colspan="5">
+              <td colspan="5">
                 <div>
-					<input type="text" class="custom-input" v-model="qnaData.qnaTitle" readonly/>
+                  <input type="text" class="custom-input" v-model="qnaData.qnaTitle" readonly/>
                 </div>
               </td>
             </tr>
-			<tr class="tbl detail" style="height: 300px">
+            <tr class="tbl detail" style="height: 300px">
               <td>
                 <div>
                   <label>
-		        	<p>
-		        		문의내용
-	        		</p>
+                    <p>
+                      문의내용
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td colspan="5">
+              <td colspan="5">
                 <div>
-					<textarea class="custom-textarea" rows="25" v-model="qnaData.qnaContents" readonly></textarea>
+                  <textarea class="custom-textarea" rows="25" v-model="qnaData.qnaContents" readonly></textarea>
                 </div>
               </td>
             </tr>
-			<tr v-if="selQnaNo" class="tbl detail" style="height: 50px">
+            <tr v-if="selQnaNo" class="tbl detail" style="height: 50px">
               <td>
                 <div>
                   <label>
-		        	<p>
-		        		답변 여부
-	        		</p>
+                    <p>
+                      답변 여부
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		{{(qnaData.answerYn=='Y')?'답변':'미답변'}}
-	        		</p>
+                    <p>
+                      {{(qnaData.answerYn=='Y')?'답변':'미답변'}}
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		담당상담원
-	        		</p>
+                    <p>
+                      담당상담원
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		{{qnaData.csrName}}
-	        		</p>
+                    <p>
+                      {{qnaData.csrName}}
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		답변일시
-	        		</p>
+                    <p>
+                      답변일시
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td>
+              <td>
                 <div>
                   <label>
-		        	<p>
-		        		{{qnaData.replyUpdtDate?qnaData.replyUpdtDate.replace('T',' '):qnaData.replyUpdtDate}}
-	        		</p>
+                    <p>
+                      {{qnaData.replyUpdtDate?qnaData.replyUpdtDate.replace('T',' '):qnaData.replyUpdtDate}}
+                    </p>
                   </label>
                 </div>
               </td>
             </tr>
-			<tr v-if="selQnaNo" class="tbl detail" style="height: 300px">
+            <tr v-if="selQnaNo" class="tbl detail" style="height: 300px">
               <td>
                 <div>
                   <label>
-		        	<p>
-		        		답변 내용
-	        		</p>
+                    <p>
+                      답변 내용
+                    </p>
                   </label>
                 </div>
               </td>
-			  <td colspan="5">
+              <td colspan="5">
                 <div>
-					<textarea class="custom-textarea" rows="25" v-model="qnaData.qnaReplyContents"></textarea>
+                  <textarea class="custom-textarea" rows="25" v-model="qnaData.qnaReplyContents"></textarea>
                 </div>
               </td>
             </tr>
           </tbody>
         </table>
-		<br/>
-		<div class="btn-area">
-			<div style="text-align: left; float:left">
-				<button type="default" class="btn-blue" @click="fn_goCsrQnaList">목록</button>
-			</div>
-			<div style="text-align: right;">
-				<button v-if="qnaData.answerYn && qnaData.answerYn === 'Y'" type="default" class="btn-green" @click="fn_updateQnaReply">수정하기</button>
-				<button v-else type="default" class="btn-green" @click="fn_saveQnaReply">답변하기</button>
-			</div>
-		</div>
+        <br/>
+        <div class="btn-area">
+          <div style="text-align: left; float:left">
+            <button type="default" class="btn-blue" @click="fn_goCsrQnaList">목록</button>
+          </div>
+          <div style="text-align: right;">
+            <button v-if="qnaData.answerYn && qnaData.answerYn === 'Y'" type="default" class="btn-green" @click="fn_updateQnaReply">수정하기</button>
+            <button v-else type="default" class="btn-green" @click="fn_saveQnaReply">답변하기</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getRequestErrorMessage } from '@/utils/requestError'
 import { getCsrQnaDetail, registCsrQnaReply, updateCsrQnaReply } from '@/api/csr.js'
 export default {
   name: 'QnaInfoList',
@@ -215,7 +216,7 @@ export default {
       selQnaNo: '',
       selQnaUserId: '',
       selPageNum: ''
-    	}
+    }
   },
   created () {
     console.log(!localStorage.getItem('accessToken'))
@@ -250,17 +251,17 @@ export default {
   },
 
   methods: {
-	  fn_getQnaInfoDetail () {
-		  const params = {
-			  qnaNo: this.selQnaNo,
-			  qnaUserId: this.selQnaUserId
-		  }
+    fn_getQnaInfoDetail () {
+      const params = {
+        qnaNo: this.selQnaNo,
+        qnaUserId: this.selQnaUserId
+      }
 
-		  console.log(params)
+      console.log(params)
       getCsrQnaDetail(params).then(res => {
         if (res) {
-				  if (res.status && res.status === 200) {
-					  console.log(res.data)
+          if (res.status && res.status === 200) {
+            console.log(res.data)
             this.data = res.data
           } else {
             if (res.data && res.data.ERROR_MSG) {
@@ -269,32 +270,32 @@ export default {
               alert('시스템 오류가 발생하였습니다.')
             }
           }
-			  }
-      })
-	  },
+        }
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_saveQnaReply () {
-		  if (!this.qnaData.csrNo) {
-			  alert('담당자가 지정되어 있지 않습니다.')
-			  return
-		  }
+    fn_saveQnaReply () {
+      if (!this.qnaData.csrNo) {
+        alert('담당자가 지정되어 있지 않습니다.')
+        return
+      }
 
-		  if (!this.qnaData.qnaReplyContents) {
-			  alert('문의 내용을 입력하여 주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaReplyContents) {
+        alert('문의 내용을 입력하여 주세요.')
+        return
+      }
 
-		  const params = {
-			  qnaNo: this.selQnaNo,
-			  qnaUserId: this.qnaData.qnaUserId,
-			  qnaReplyContents: this.qnaData.qnaReplyContents
-		  }
+      const params = {
+        qnaNo: this.selQnaNo,
+        qnaUserId: this.qnaData.qnaUserId,
+        qnaReplyContents: this.qnaData.qnaReplyContents
+      }
 
-		  console.log(params)
-		  registCsrQnaReply(params).then(res => {
-			  console.log(res)
-			  if (res) {
-				  if (res.status && res.status === 200) {
+      console.log(params)
+      registCsrQnaReply(params).then(res => {
+        console.log(res)
+        if (res) {
+          if (res.status && res.status === 200) {
             alert('정상 저장 되었습니다.')
             this.fn_getQnaInfoDetail()
           } else {
@@ -304,32 +305,32 @@ export default {
               alert('시스템 오류가 발생하였습니다.')
             }
           }
-			  }
-		  })
-	  },
+        }
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_updateQnaReply () {
-		  if (!this.qnaData.answerYn || this.qnaData.answerYn === 'N') {
-			  alert('담당자가 지정되어 있지 않습니다.')
-			  return
-		  }
+    fn_updateQnaReply () {
+      if (!this.qnaData.answerYn || this.qnaData.answerYn === 'N') {
+        alert('담당자가 지정되어 있지 않습니다.')
+        return
+      }
 
-		  if (!this.qnaData.qnaReplyContents) {
-			  alert('문의 내용을 입력하여 주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaReplyContents) {
+        alert('문의 내용을 입력하여 주세요.')
+        return
+      }
 
-		  const params = {
-			  qnaNo: this.selQnaNo,
-			  qnaReplyNo: this.qnaData.qnaReplyNo,
-			  qnaUserId: this.qnaData.qnaUserId,
-			  qnaReplyContents: this.qnaData.qnaReplyContents
-		  }
+      const params = {
+        qnaNo: this.selQnaNo,
+        qnaReplyNo: this.qnaData.qnaReplyNo,
+        qnaUserId: this.qnaData.qnaUserId,
+        qnaReplyContents: this.qnaData.qnaReplyContents
+      }
 
-		  updateCsrQnaReply(params).then(res => {
-			  console.log(res)
-			  if (res) {
-				  if (res.status && res.status === 200) {
+      updateCsrQnaReply(params).then(res => {
+        console.log(res)
+        if (res) {
+          if (res.status && res.status === 200) {
             alert('정상 저장 되었습니다.')
             this.fn_getQnaInfoDetail()
           } else {
@@ -339,18 +340,18 @@ export default {
               alert('시스템 오류가 발생하였습니다.')
             }
           }
-			  }
-		  })
-	  },
+        }
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_goCsrQnaList () {
+    fn_goCsrQnaList () {
       this.$router.push({
         name: 'csrQnaList',
         query: {
           selPageNum: this.selPageNum ? this.selPageNum : 1
         }
       })
-	  }
+    }
   }
 }
 </script>

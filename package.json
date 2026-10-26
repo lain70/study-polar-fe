@@ -5,17 +5,18 @@
     "scripts": {
         "start": "vue-cli-service serve --mode loc",
         "serve": "vue-cli-service serve --mode loc",
-        "build": "vue-cli-service build --mode prd",
+        "build": "NODE_ENV=production vue-cli-service build --mode prd",
         "build:loc": "vue-cli-service build --mode loc",
-        "build:prd": "vue-cli-service build --mode prd",
-        "lint": "vue-cli-service lint"
+        "build:prd": "NODE_ENV=production vue-cli-service build --mode prd",
+        "lint": "vue-cli-service lint",
+        "test:regression": "node --test tests/*.js"
     },
     "dependencies": {
         "core-js": "^3.8.3",
         "http-proxy-middleware": "^2.0.3",
-        "vue": "^2.6.14",
-        "vue-router": "^3.5.1",
-        "vuex": "^3.6.2"
+        "vue": "^3.5.44",
+        "vue-router": "^4.6.4",
+        "vuex": "^4.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.12.16",
@@ -25,19 +26,19 @@
         "@vue/cli-plugin-router": "~5.0.0",
         "@vue/cli-plugin-vuex": "~5.0.0",
         "@vue/cli-service": "~5.0.0",
-        "@vue/eslint-config-standard": "^6.1.0",
+        "@vue/eslint-config-standard": "^8.0.1",
         "axios": "^0.25.0",
         "axios-mock-adapter": "^1.19.0",
-        "eslint": "^7.32.0",
+        "eslint": "^8.57.1",
         "eslint-plugin-import": "^2.25.3",
         "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^5.1.0",
-        "eslint-plugin-vue": "^8.0.3",
+        "eslint-plugin-promise": "^6.6.0",
+        "eslint-plugin-vue": "^9.33.0",
         "sass": "^1.102.0",
         "sass-loader": "^12.6.0",
         "stylus": "^0.55.0",
         "stylus-loader": "^6.1.0",
-        "vue-template-compiler": "^2.6.14"
+        "@vue/compiler-sfc": "^3.5.44"
     },
     "eslintConfig": {
         "root": false,
@@ -45,13 +46,23 @@
             "node": false
         },
         "extends": [
-            "plugin:vue/essential",
+            "plugin:vue/vue3-essential",
             "@vue/standard"
         ],
         "parserOptions": {
             "parser": "@babel/eslint-parser"
         },
-        "rules": {}
+        "rules": {},
+        "overrides": [
+            {
+                "files": ["babel.config.js", "vue.config.js"],
+                "env": { "node": true }
+            },
+            {
+                "files": ["src/envs.js", "src/router/index.js"],
+                "globals": { "process": "readonly" }
+            }
+        ]
     },
     "browserslist": [
         "> 1%",

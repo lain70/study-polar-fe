@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { getRequestErrorMessage } from '@/utils/requestError'
 import { getQnaList } from '@/api/qna.js'
 
 export default {
@@ -107,7 +108,7 @@ export default {
       nowPage: {
         color: 'red'
       }
-    	}
+    }
   },
   created () {
     this.fn_getQnaInfoList()
@@ -121,19 +122,20 @@ export default {
   },
 
   methods: {
-	  fn_getQnaInfoList () {
-		  this.startNumber = (this.selPage - 1) * this.pageCount
-		  const params = {
-			  startNum: this.startNumber,
-			  pageCnt: this.pageCount
-		  }
+    fn_getQnaInfoList () {
+      this.startNumber = (this.selPage - 1) * this.pageCount
+      const params = {
+        startNum: this.startNumber,
+        pageCnt: this.pageCount
+      }
 
-		  console.log(params)
-		  getQnaList(params).then(res => {
-			  console.log(res)
-			  if (res.status && res.status === 200) {
+      console.log(params)
+      getQnaList(params).then(res => {
+        console.log(res)
+        if (res.status && res.status === 200) {
           this.qnaDataList = res.data
           this.totalCnt = parseInt(res.headers['x-total-count'])
+          this.fn_calPaging()
         } else {
           if (res.data && res.data.ERROR_MSG) {
             alert(res.data.ERROR_MSG)
@@ -141,28 +143,23 @@ export default {
             alert('시스템 오류가 발생하였습니다.')
           }
         }
-		  })
-		  this.fn_calPaging()
-	  },
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_calPaging () {
-		  if (this.totalCnt % this.pageCount > 0) {
-			  this.totalPageCnt = parseInt(this.totalCnt / this.pageCount) + 1
-		  } else {
-			  this.totalPageCnt = parseInt(this.totalCnt / this.pageCount) + 1
-		  }
-	  },
+    fn_calPaging () {
+      this.totalPageCnt = Math.max(1, Math.ceil(this.totalCnt / this.pageCount))
+    },
 
-	  fn_clickPaging (page) {
-		  if (page < 1 || page > this.totalPageCnt) {
-			  return
-		  }
-		  console.log(page)
-		  this.selPage = page
-		  this.fn_getQnaInfoList()
-	  },
+    fn_clickPaging (page) {
+      if (page < 1 || page > this.totalPageCnt) {
+        return
+      }
+      console.log(page)
+      this.selPage = page
+      this.fn_getQnaInfoList()
+    },
 
-	  fn_goToPage (qnaNo, qnaUserId) {
+    fn_goToPage (qnaNo, qnaUserId) {
       this.$router.push({
         name: 'qnaDetail',
         query: {
@@ -171,17 +168,17 @@ export default {
           selPageNum: this.selPage ? this.selPage : 1
         }
       })
-	  }
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
 .inquiry-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #6f8083;
-  --line: #dce5e3;
+  --line: var(--color-border);
   min-height: 100vh;
-  background: #f8faf9;
+  background: var(--color-background);
   color: var(--ink);
   text-align: left;
 }
@@ -251,7 +248,7 @@ export default {
 .content-heading p {
   margin: 0 0 12px;
   color: #87aaa5;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.2em;
 }
@@ -325,7 +322,7 @@ export default {
 .inquiry-table th {
   background: #f0f5f3;
   color: #53696d;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -362,7 +359,7 @@ export default {
   border-radius: 14px;
   background: #edf0ef;
   color: #7b8788;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -395,7 +392,7 @@ export default {
 
 .pagination span {
   color: #899697;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .pagination strong {
@@ -412,12 +409,12 @@ export default {
   border-top: 1px solid var(--line);
   background: #eef3f1;
   color: #718184;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .site-footer strong {
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.16em;
 }
 
@@ -438,7 +435,7 @@ export default {
   }
 
   .brand {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .site-header nav a:first-child,
@@ -488,7 +485,7 @@ export default {
     position: absolute;
     left: 4px;
     color: #8b999a;
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .inquiry-table .empty-state {

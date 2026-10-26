@@ -293,11 +293,11 @@ export default {
 
 <style lang="scss" scoped>
 .detail-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #6f8083;
-  --line: #dce5e3;
+  --line: var(--color-border);
   min-height: 100vh;
-  background: #f8faf9;
+  background: var(--color-background);
   color: var(--ink);
   text-align: left;
 }
@@ -315,7 +315,7 @@ export default {
   margin: 0 auto;
   padding: 0 32px;
   display: grid;
-  grid-template-columns: 250px minmax(280px, 560px) 250px;
+  grid-template-columns: minmax(200px, 1fr) minmax(220px, 480px) auto;
   align-items: center;
   justify-content: space-between;
   gap: 28px;
@@ -410,8 +410,8 @@ export default {
   right: 0;
   width: 250px;
   margin: 0;
-  color: #b14949;
-  font-size: 10px;
+  color: var(--color-destructive);
+  font-size: 12px;
   text-align: right;
 }
 
@@ -443,7 +443,7 @@ export default {
   align-items: center;
   gap: 10px;
   color: #899896;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .breadcrumb a {
@@ -518,7 +518,7 @@ export default {
 .section-kicker {
   margin: 0 0 16px;
   color: #71918d;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.17em;
 }
@@ -556,7 +556,7 @@ export default {
 
 .original-price {
   margin: 0 0 6px;
-  color: #9ba8a7;
+  color: var(--color-muted-foreground);
   font-size: 13px;
   text-decoration: line-through;
 }
@@ -633,7 +633,7 @@ export default {
 .notice-card p {
   margin: 0;
   color: #667c79;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -785,7 +785,7 @@ export default {
   border-top: 1px solid var(--line);
   background: #eef3f1;
   color: #687b7e;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .footer-brand {
@@ -796,14 +796,14 @@ export default {
 }
 
 .footer-brand strong {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.16em;
 }
 
 .footer-brand p {
   margin: 5px 0 0;
   color: #8b9b9d;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.12em;
 }
 
@@ -851,7 +851,7 @@ export default {
   }
 
   .brand {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .account-button {
@@ -902,7 +902,7 @@ export default {
 
   .detail-tabs a {
     min-height: 54px;
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .detail-section {
@@ -924,4 +924,8 @@ export default {
     flex-direction: column;
   }
 }
+
+.search-form:focus-within { outline: 3px solid var(--color-ring); outline-offset: 3px; }
+.account-button, .auth-button, .main-nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.main-image, .detail-section { border-radius: var(--radius-card); }
 </style>

@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import { getRequestErrorMessage } from '@/utils/requestError'
 import { getQnaDetail, registQnaInfo, updateQnaInfo } from '@/api/qna.js'
 export default {
   name: 'QnaInfoList',
@@ -125,7 +126,7 @@ export default {
       selQnaNo: '',
       selQnaUserId: '',
       selPageNum: ''
-    	}
+    }
   },
   created () {
     if (this.$route.query.selQnaNo) {
@@ -153,16 +154,16 @@ export default {
   },
 
   methods: {
-	  fn_getQnaInfoDetail () {
-		  const params = {
-			  qnaNo: this.selQnaNo,
-			  qnaUserId: this.selQnaUserId
-		  }
+    fn_getQnaInfoDetail () {
+      const params = {
+        qnaNo: this.selQnaNo,
+        qnaUserId: this.selQnaUserId
+      }
 
-		  console.log(params)
+      console.log(params)
       getQnaDetail(params).then(res => {
         if (res) {
-				  if (res.status && res.status === 200) {
+          if (res.status && res.status === 200) {
             this.data = res.data
           } else {
             if (res.data && res.data.ERROR_MSG) {
@@ -171,42 +172,42 @@ export default {
               alert('시스템 오류가 발생하였습니다.')
             }
           }
-			  }
-      })
-	  },
+        }
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_registQna () {
-		  if (!this.qnaData.qnaUserId) {
-			  alert('작성자 ID를 입력하여 주세요.')
-			  return
-		  }
+    fn_registQna () {
+      if (!this.qnaData.qnaUserId) {
+        alert('작성자 ID를 입력하여 주세요.')
+        return
+      }
 
-		  if (!this.qnaData.qnaUserPwd) {
-			  alert('비밀번호를 입력하여 주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaUserPwd) {
+        alert('비밀번호를 입력하여 주세요.')
+        return
+      }
 
-		  if (!this.qnaData.qnaTitle) {
-			  alert('문의 제목을 입력하여주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaTitle) {
+        alert('문의 제목을 입력하여주세요.')
+        return
+      }
 
-		  if (!this.qnaData.qnaContents) {
-			  alert('문의 내용을 입력하여 주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaContents) {
+        alert('문의 내용을 입력하여 주세요.')
+        return
+      }
 
-		  const params = {
-			  qnaUserId: this.qnaData.qnaUserId,
-			  qnaUserPwd: this.qnaData.qnaUserPwd,
-			  qnaTitle: this.qnaData.qnaTitle,
-			  qnaContents: this.qnaData.qnaContents
-		  }
+      const params = {
+        qnaUserId: this.qnaData.qnaUserId,
+        qnaUserPwd: this.qnaData.qnaUserPwd,
+        qnaTitle: this.qnaData.qnaTitle,
+        qnaContents: this.qnaData.qnaContents
+      }
 
-		  registQnaInfo(params).then(res => {
-			  console.log(res)
-			  if (res) {
-				  if (res.status && res.status === 200) {
+      registQnaInfo(params).then(res => {
+        console.log(res)
+        if (res) {
+          if (res.status && res.status === 200) {
             alert('정상 저장 되었습니다.')
             this.fn_goQnaList()
           } else {
@@ -216,37 +217,37 @@ export default {
               alert('시스템 오류가 발생하였습니다.')
             }
           }
-			  }
-		  })
-	  },
+        }
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_updateQna () {
-		  if (!this.qnaData.qnaUserPwd) {
-			  alert('비밀번호를 입력하여 주세요.')
-			  return
-		  }
+    fn_updateQna () {
+      if (!this.qnaData.qnaUserPwd) {
+        alert('비밀번호를 입력하여 주세요.')
+        return
+      }
 
-		  if (!this.qnaData.qnaTitle) {
-			  alert('문의 제목을 입력하여주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaTitle) {
+        alert('문의 제목을 입력하여주세요.')
+        return
+      }
 
-		  if (!this.qnaData.qnaContents) {
-			  alert('문의 내용을 입력하여 주세요.')
-			  return
-		  }
+      if (!this.qnaData.qnaContents) {
+        alert('문의 내용을 입력하여 주세요.')
+        return
+      }
 
-		  const params = {
-			  qnaNo: this.selQnaNo,
-			  qnaUserId: this.selQnaUserId,
-			  qnaUserPwd: this.qnaData.qnaUserPwd,
-			  qnaTitle: this.qnaData.qnaTitle,
-			  qnaContents: this.qnaData.qnaContents
-		  }
-		  console.log(params)
-		  updateQnaInfo(params).then(res => {
-			  console.log(res)
-			  if (res.status && res.status === 200) {
+      const params = {
+        qnaNo: this.selQnaNo,
+        qnaUserId: this.selQnaUserId,
+        qnaUserPwd: this.qnaData.qnaUserPwd,
+        qnaTitle: this.qnaData.qnaTitle,
+        qnaContents: this.qnaData.qnaContents
+      }
+      console.log(params)
+      updateQnaInfo(params).then(res => {
+        console.log(res)
+        if (res.status && res.status === 200) {
           alert('정상 저장 되었습니다.')
           this.fn_goQnaList()
         } else {
@@ -256,29 +257,27 @@ export default {
             alert('시스템 오류가 발생하였습니다.')
           }
         }
-		  }).then(err => {
-			  console.log(err)
-		  })
-	  },
+      }).catch(error => { alert(getRequestErrorMessage(error)) })
+    },
 
-	  fn_goQnaList () {
+    fn_goQnaList () {
       this.$router.push({
         name: 'qnaList',
         query: {
           selPageNum: this.selPageNum ? this.selPageNum : 1
         }
       })
-	  }
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
 .inquiry-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #6f8083;
-  --line: #dce5e3;
+  --line: var(--color-border);
   min-height: 100vh;
-  background: #f8faf9;
+  background: var(--color-background);
   color: var(--ink);
   text-align: left;
 }
@@ -349,7 +348,7 @@ export default {
 .answer-heading p {
   margin: 0 0 12px;
   color: #87aaa5;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.2em;
 }
@@ -392,7 +391,7 @@ export default {
 
 .form-heading > span {
   color: #899697;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 i {
@@ -419,7 +418,7 @@ i {
   display: flex;
   gap: 16px;
   border-right: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .meta-grid > div:last-child {
@@ -493,7 +492,7 @@ i {
   display: block;
   margin-top: 8px;
   color: #8b999a;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .answer-card {
@@ -508,7 +507,7 @@ i {
   border-radius: 15px;
   background: #e3e7e6;
   color: #778485;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -521,7 +520,7 @@ i {
   margin: 0 0 20px;
   display: flex;
   gap: 30px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .answer-meta div {
@@ -586,12 +585,12 @@ i {
   border-top: 1px solid var(--line);
   background: #eef3f1;
   color: #718184;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .site-footer strong {
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.16em;
 }
 
@@ -612,7 +611,7 @@ i {
   }
 
   .brand {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .site-header nav a:first-child,

@@ -1,9 +1,6 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import MainView from '../views/MainView.vue'
-
-Vue.use(VueRouter)
 
 const routes = [{
   path: '/',
@@ -93,25 +90,24 @@ const routes = [{
     import('@/views/csr/CsrQnaInfoDetail.vue')
 },
 {
-  path: '*',
+  path: '/:pathMatch(.*)*',
   component: () =>
     import(/* webpackChunkName: "group-error-404" */ '@/views/error/404.vue')
 }
 
 ]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     }
     if (to.hash) {
-      return { selector: to.hash }
+      return { el: to.hash }
     }
-    return { x: 0, y: 0 }
+    return { left: 0, top: 0 }
   }
 })
 

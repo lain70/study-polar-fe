@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /workspace
 
@@ -12,7 +12,7 @@ ARG VUE_APP_API_BASE_URL=/api
 ENV VUE_APP_SERVICE_KEY=${VUE_APP_SERVICE_KEY}
 ENV VUE_APP_API_BASE_URL=${VUE_APP_API_BASE_URL}
 
-RUN npx vue-cli-service build --mode prd
+RUN npm run build:prd
 
 FROM nginx:1.27-alpine
 

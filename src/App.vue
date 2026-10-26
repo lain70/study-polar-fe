@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="application-shell">
     <router-view/>
   </div>
 </template>
@@ -11,10 +11,10 @@ body
   min-height 100%
 
 body
-  background #f7faf9
+  background var(--color-background)
 
 #app
-  font-family Avenir, Helvetica, Arial, sans-serif
+  font-family var(--font-body)
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   text-align center

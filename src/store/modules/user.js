@@ -74,12 +74,8 @@ export default {
             localStorage.setItem('refreshToken', '')
             resolve(true)
           } else {
-            if (response.data && response.data.ERROR_MSG) {
-              alert(response.data.ERROR_MSG)
-            } else {
-              alert('시스템 오류가 발생하였습니다.')
-            }
-            reject()
+            const data = response && response.data
+            reject(new Error((data && data.ERROR_MSG) || '로그아웃에 실패했습니다.'))
           }
         }).catch(error => {
           console.log(error)

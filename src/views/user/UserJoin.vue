@@ -158,7 +158,7 @@ export default {
 
 <style lang="scss" scoped>
 .signup-page {
-  --ink: #18343a;
+  --ink: var(--color-foreground);
   --muted: #667b80;
   min-height: 100vh;
   box-sizing: border-box;
@@ -188,7 +188,7 @@ export default {
   align-items: center;
   gap: 10px;
   color: var(--ink);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-decoration: none;
@@ -209,7 +209,7 @@ export default {
 .signup-kicker {
   margin: 42px 0 12px;
   color: #6c918c;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.22em;
 }
@@ -245,7 +245,7 @@ export default {
 
 .signup-form label span {
   color: #8b9b9e;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -304,7 +304,7 @@ export default {
 }
 
 .error-message {
-  color: #b14949;
+  color: var(--color-destructive);
 }
 
 .success-message {
