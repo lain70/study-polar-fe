@@ -14,9 +14,10 @@
         </form>
 
         <div class="account-actions">
-          <button v-if="isAuthenticated" class="account-button" type="button" @click="editUserInfo">
-            회원정보
-          </button>
+          <router-link class="account-link" :to="{ name: 'myPage' }">
+            <account-icon name="user" />
+            <span>마이페이지</span>
+          </router-link>
           <button class="auth-button" type="button" :disabled="isLoggingOut" @click="handleAuthAction">
             {{ authButtonText }}
           </button>
@@ -111,6 +112,12 @@
               <p>상품 및 주문에 관해 궁금한 점이 있다면 고객센터로 문의해 주세요.</p>
             </div>
 
+            <form class="cart-form" @submit.prevent="addToCart">
+              <label for="cart-quantity">수량</label>
+              <input id="cart-quantity" v-model.number="cartQuantity" type="number" min="1" step="1" required :disabled="isSoldOut || isAddingToCart">
+              <button ref="addCartButton" type="submit" :disabled="isSoldOut || isAddingToCart">{{ isSoldOut ? '품절' : isAddingToCart ? '담는 중…' : '장바구니 담기' }}</button>
+            </form>
+            <p v-if="cartError" role="alert">{{ cartError }}</p>
             <router-link class="inquiry-button" to="/csr">상품 문의하기</router-link>
           </aside>
         </section>
@@ -151,6 +158,21 @@
       </template>
     </main>
 
+    <dialog ref="cartDialog" class="cart-modal" aria-labelledby="cart-modal-title" aria-describedby="cart-modal-description" @click.self="closeCartModal" @close="restoreCartFocus">
+      <section class="cart-modal-content">
+        <button class="cart-modal-close" type="button" aria-label="알림 닫기" @click="closeCartModal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+        </button>
+        <span class="cart-modal-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6" /></svg></span>
+        <h2 id="cart-modal-title">장바구니에 담겼습니다.</h2>
+        <p id="cart-modal-description">선택하신 상품을 장바구니에서 확인해 보세요.</p>
+        <div class="cart-modal-actions">
+          <button class="cart-modal-primary" type="button" autofocus @click="goToCart">장바구니로 이동하기</button>
+          <button class="cart-modal-secondary" type="button" @click="closeCartModal">계속 쇼핑하기</button>
+        </div>
+      </section>
+    </dialog>
+
     <footer class="site-footer">
       <div class="footer-brand">
         <span class="brand-mark" aria-hidden="true">P</span>
@@ -166,14 +188,20 @@
 </template>
 
 <script>
+import AccountIcon from '@/components/AccountIcon.vue'
+import { addCartItem } from '@/api/cart'
 import { getGoodsDetail } from '@/api/goods'
 import envs from '@/envs'
 
 export default {
   name: 'GoodsDetailView',
+  components: { AccountIcon },
   data () {
     return {
       goods: null,
+      cartQuantity: 1,
+      isAddingToCart: false,
+      cartError: '',
       activeImageIndex: 0,
       isLoading: false,
       errorMessage: '',
@@ -236,7 +264,45 @@ export default {
     this.loadGoods()
   },
   methods: {
+    closeCartModal () {
+      const dialog = this.$refs.cartDialog
+      if (dialog && dialog.open) dialog.close()
+    },
+    restoreCartFocus () {
+      const button = this.$refs.addCartButton
+      if (button && !button.disabled) button.focus()
+    },
+    goToCart () {
+      this.closeCartModal()
+      this.$router.push({ name: 'cart' })
+    },
+    async addToCart () {
+      this.cartError = ''
+      if (!localStorage.getItem('accessToken')) {
+        this.$router.push({ name: 'userLogin', query: { goodsNo: String(this.goods.goodsNo) } })
+        return
+      }
+      if (this.isSoldOut || this.isAddingToCart) return
+      if (!Number.isSafeInteger(this.cartQuantity) || this.cartQuantity < 1 || this.cartQuantity > 2147483647) {
+        this.cartError = '수량은 1 이상의 정수로 입력해 주세요.'
+        return
+      }
+      this.isAddingToCart = true
+      const goodsNo = this.goods.goodsNo
+      try {
+        await addCartItem(goodsNo, this.cartQuantity)
+        const dialog = this.$refs.cartDialog
+        if (this.goods && this.goods.goodsNo === goodsNo && dialog && !dialog.open) dialog.showModal()
+      } catch (error) {
+        this.cartError = (error.response && error.response.data && error.response.data.ERROR_MSG) || '장바구니에 담지 못했습니다. 다시 시도해 주세요.'
+      } finally {
+        this.isAddingToCart = false
+      }
+    },
     loadGoods () {
+      this.closeCartModal()
+      this.cartError = ''
+      this.cartQuantity = 1
       this.isLoading = true
       this.errorMessage = ''
       this.goods = null
@@ -262,9 +328,6 @@ export default {
     },
     currency (value) {
       return `${Number(value || 0).toLocaleString('ko-KR')}원`
-    },
-    editUserInfo () {
-      this.$router.push({ name: 'userPasswordConfirm' })
     },
     handleAuthAction () {
       if (!this.isAuthenticated) {
@@ -292,6 +355,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.cart-modal { width: min(440px, calc(100% - 40px)); max-height: calc(100dvh - 48px); padding: 0; border: 1px solid var(--color-border); border-radius: 16px; background: var(--color-card); color: var(--color-foreground); box-shadow: 0 24px 80px rgba(24, 52, 58, .18); }
+.cart-modal::backdrop { background: rgba(15, 35, 36, .48); }
+.cart-modal-content { position: relative; padding: 44px 28px 28px; text-align: center; }
+.cart-modal-close { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 44px; height: 44px; padding: 10px; border: 0; background: transparent; color: var(--color-muted-foreground); border-radius: 50%; }
+.cart-modal-close svg { width: 22px; height: 22px; }
+.cart-modal-icon { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 24px; border: 1px solid var(--color-border); border-radius: 50%; color: var(--color-primary); background: var(--color-background); }
+.cart-modal-icon svg { width: 28px; height: 28px; }
+.cart-modal h2 { margin: 0; font-size: clamp(20px, 4.8vw, 24px); letter-spacing: -.04em; }
+.cart-modal p { margin: 12px 0 28px; font-size: 14px; color: var(--color-muted-foreground); line-height: 1.7; }
+.cart-modal-actions { display: flex; flex-direction: column; gap: 10px; }
+.cart-modal-actions button { min-height: 48px; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: 6px; font-weight: 700; font-size: 14px; }
+.cart-modal-actions .cart-modal-primary { background: var(--color-primary); border-color: var(--color-primary); color: var(--color-on-primary); }
+.cart-modal-actions .cart-modal-primary:hover { background: var(--color-foreground); }
+.cart-modal-secondary { background: var(--color-card); color: var(--color-foreground); }
+.cart-modal-secondary:hover, .cart-modal-close:hover { background: var(--color-background); }
+
+.account-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--color-foreground); text-decoration: none; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.account-link svg { width: 24px; height: 24px; }
+
+.cart-form { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 24px; }
+.cart-form input { width: 80px; min-height: 44px; padding: 8px; box-sizing: border-box; }
+.cart-form button { min-height: 44px; padding: 12px 20px; border: 0; border-radius: var(--radius-card); background: var(--color-primary); color: var(--color-primary-foreground, #fff); cursor: pointer; }
+.cart-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+
 .detail-page {
   --ink: var(--color-foreground);
   --muted: #6f8083;

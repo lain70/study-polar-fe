@@ -15,3 +15,7 @@ export function updateUserInfo (params) {
     data: params
   })
 }
+
+export function getUserInfo () {
+  return requestCsr({ url: '/user/info', method: 'GET' })
+}
