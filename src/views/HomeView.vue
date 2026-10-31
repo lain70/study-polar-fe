@@ -104,7 +104,8 @@ export default {
       this.$store.dispatch('UserLoginProc', loginRequest)
         .then(() => {
           this.$router.push({
-            name: 'main'
+            name: ['cart', 'myPage', 'userInfoView'].includes(this.$route.query.redirect) ? this.$route.query.redirect : /^\d+$/.test(this.$route.query.goodsNo || '') ? 'goodsDetail' : 'main',
+            params: { goodsNo: this.$route.query.goodsNo }
           })
         })
         .catch(error => {

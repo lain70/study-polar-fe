@@ -11,10 +11,10 @@
         <button type="submit" aria-label="검색">검색</button>
       </form>
       <div class="account-actions">
-        <button v-if="isAuthenticated" class="account-button" type="button" @click="editUserInfo">
-          <span aria-hidden="true">○</span>
-          회원정보 수정
-        </button>
+        <router-link class="account-link" :to="{ name: 'myPage' }">
+          <span class="account-icon"><account-icon name="user" /></span>
+          <span>마이페이지</span>
+        </router-link>
         <button class="auth-button" type="button" :disabled="isLoggingOut" @click="handleAuthAction">
           {{ authButtonText }}
         </button>
@@ -32,8 +32,11 @@
 </template>
 
 <script>
+import AccountIcon from '@/components/AccountIcon.vue'
+
 export default {
   name: 'SiteHeader',
+  components: { AccountIcon },
   data: () => ({ isAuthenticated: Boolean(localStorage.getItem('accessToken')), isLoggingOut: false, logoutError: '' }),
   computed: {
     authButtonText () {
@@ -42,7 +45,6 @@ export default {
     }
   },
   methods: {
-    editUserInfo () { this.$router.push({ name: 'userPasswordConfirm' }) },
     handleAuthAction () {
       if (!this.isAuthenticated) {
         this.$router.push({ name: 'userLogin' })
@@ -54,7 +56,10 @@ export default {
       this.logoutError = ''
       this.isLoggingOut = true
       this.$store.dispatch('UserLogoutProc')
-        .then(() => { this.isAuthenticated = false })
+        .then(() => {
+          this.isAuthenticated = false
+          if (['cart', 'myPage', 'userInfoView'].includes(this.$route.name)) this.$router.replace({ name: 'userLogin' })
+        })
         .catch(() => { this.logoutError = '로그아웃에 실패했습니다. 잠시 후 다시 시도해 주세요.' })
         .finally(() => { this.isLoggingOut = false })
     }
@@ -63,6 +68,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.account-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--color-foreground); font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.account-icon { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--color-border); border-radius: 50%; }
+.account-icon svg { width: 19px; height: 19px; }
+.account-link:hover, .account-link.router-link-active { color: var(--color-primary); }
+@media (max-width: 480px) { .account-link { gap: 6px; font-size: 12px; } .account-icon { width: 26px; height: 26px; } }
 .site-header { position: relative; z-index: 10; border-bottom: 1px solid var(--color-border); background: rgba(255, 255, 255, .96); }
 .utility-bar { max-width: 1240px; min-height: 100px; margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: minmax(200px, 1fr) minmax(220px, 480px) auto; align-items: center; justify-content: space-between; gap: 28px; }
 .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--color-foreground); font-size: 12px; font-weight: 800; letter-spacing: .16em; text-decoration: none; }

@@ -21,7 +21,7 @@
           {{ isSubmitting ? '확인 중...' : '확인' }}
         </button>
       </form>
-      <router-link class="cancel-link" :to="{ name: 'main' }">취소</router-link>
+      <router-link class="cancel-link" :to="{ name: 'userInfoView' }">내 정보로 돌아가기</router-link>
     </section>
   </main>
 </template>

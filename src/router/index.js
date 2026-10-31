@@ -3,6 +3,18 @@ import HomeView from '../views/HomeView.vue'
 import MainView from '../views/MainView.vue'
 
 const routes = [{
+  path: '/mypage',
+  name: 'myPage',
+  component: () => import('@/views/user/MyPageView.vue')
+}, {
+  path: '/user/profile',
+  name: 'userInfoView',
+  component: () => import('@/views/user/UserInfoView.vue')
+}, {
+  path: '/cart',
+  name: 'cart',
+  component: () => import('@/views/cart/CartView.vue')
+}, {
   path: '/',
   name: 'main',
   component: MainView
@@ -112,14 +124,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const protectedRoutes = ['csrInquiry', 'qnaList', 'qnaDetail', 'csrQnaList', 'csrQnaDetail', 'userPasswordConfirm', 'userInfoEdit']
+  const protectedRoutes = ['myPage', 'userInfoView', 'cart', 'csrInquiry', 'qnaList', 'qnaDetail', 'csrQnaList', 'csrQnaDetail', 'userPasswordConfirm', 'userInfoEdit']
   if (to.name === 'userLogin' && localStorage.getItem('accessToken')) {
     next({ name: 'main' })
     return
   }
 
   if (protectedRoutes.includes(to.name) && !localStorage.getItem('accessToken')) {
-    next({ name: 'userLogin' })
+    next({ name: 'userLogin', query: ['cart', 'myPage', 'userInfoView'].includes(to.name) ? { redirect: to.name } : {} })
     return
   }
 

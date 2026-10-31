@@ -8,7 +8,7 @@
       <nav aria-label="페이지 메뉴">
         <router-link :to="{ name: 'main' }">쇼핑 홈</router-link>
         <router-link to="/csr">문의하기</router-link>
-        <button type="button">회원정보 수정</button>
+        <router-link :to="{ name: 'myPage' }">마이페이지</router-link>
       </nav>
     </header>
 
